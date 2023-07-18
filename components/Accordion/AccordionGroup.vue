@@ -2,9 +2,9 @@
 	Last modified: 2023/07/17 11:42:09
 -->
 <template>
-  <Component :is="tag" class="c-accordion-group">
-    <slot v-bind="{ hasFocus, method: { openAll, closeAll } }" />
-  </Component>
+	<Component :is="tag" class="c-accordion-group">
+		<slot v-bind="{ hasFocus, method: { openAll, closeAll } }" />
+	</Component>
 </template>
 
 <script>

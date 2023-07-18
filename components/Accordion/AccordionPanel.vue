@@ -35,7 +35,6 @@
 import { reactive } from 'vue';
 import { _accordionMaps } from './index.js';
 
-
 const provide = reactive({
 	accordionGroup: null,
 	accordionLevel: 0,
