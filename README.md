@@ -5,13 +5,14 @@ Vue accordion component is a list of headers that hide or reveal additional cont
 ## Using the components
 
 Import and register the AccordionGroup, AccordionHeader, AccordionPanel component make sure that the AccordionHeader and AccordionPanel are wrapped by AccordionGroup like you see below but it doesn't need to be direct descendents:
+If used as a layer the components are auto-imported and may simply be used as-is.
 
 ```js
 import {
 	AccordionGroup,
 	AccordionHeader,
 	AccordionPanel,
-} from '~/citi-baseline/components/Accordion/';
+} from '@limbo-works/accordion/components/Accordion/';
 
 export default {
 	name: 'ExampleComponent',
