@@ -2,9 +2,6 @@
 
 Vue accordion component is a list of headers that hide or reveal additional content when selected/opened. that contains the AccordionGroup as the wrapper of the accordion, AccordionHeader as the header of each panel and the AccordionPanel for the panels that has two states of collapsed and expanded.
 
--   https://dev-8481od-fe.testserver.nu/da/bo-og-leve/et-godt-sted-at-bo/byer-og-landsbyer/
--   https://dev-8247sl-fe.testserver.nu/da/limbo-testomraade/borgerdk-accordion/
-
 ## Using the components
 
 Import and register the AccordionGroup, AccordionHeader, AccordionPanel component make sure that the AccordionHeader and AccordionPanel are wrapped by AccordionGroup like you see below but it doesn't need to be direct descendents:
