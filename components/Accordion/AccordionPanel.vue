@@ -89,6 +89,7 @@ const myProvide = reactive({
 	accordionGroup: null,
 	accordionLevel: 0,
 });
+
 provide('accordionGroup', myProvide.accordionGroup);
 provide('accordionLevel', myProvide.accordionLevel);
 provide('accordionParentPanel', instance);
@@ -167,19 +168,13 @@ const transitionListeners = computed(() => {
 });
 
 const computedAriaLabel = computed(() => {
-	return (
-		props.ariaLabel ||
-		(header?.ariaLabel ? null : 'panel') ||
-		undefined
-	);
+	return props.ariaLabel || (header?.ariaLabel ? null : 'panel') || undefined;
 });
 
 const computedAriaLabelledby = computed(() => {
 	const { id: headerId = header?.$options?.propsData?.id } = header || {};
 	return (
-		props.ariaLabelledby ||
-		(props.ariaLabel ? null : headerId) ||
-		undefined
+		props.ariaLabelledby || (props.ariaLabel ? null : headerId) || undefined
 	);
 });
 
@@ -199,7 +194,8 @@ const denyClosing = computed(() => {
 	if (accordionGroup) {
 		if (accordionGroup.minOneOpen && isOpen.value) {
 			if (
-				accordionGroup.panelList.filter((panel) => panel.isOpen).length === 1
+				accordionGroup.panelList.filter((panel) => panel.isOpen)
+					.length === 1
 			) {
 				denyClosing = true;
 			}
@@ -230,8 +226,9 @@ watch(nestingLevel, () => {
 if (typeof window !== 'undefined') {
 	_accordionMaps.panels[props.id] = instance;
 }
-
 onMounted(() => {
+	_accordionMaps.panels[props.id] = instance;
+
 	checkOpenByHash();
 
 	// This allows it to start open without an initial transition
@@ -310,7 +307,9 @@ function checkOpenByHash() {
 function setMaxStyles() {
 	if (props.transition) {
 		const { scrollWidth, scrollHeight } = instance.vnode.el;
-		let { maxWidth, maxHeight } = window.getComputedStyle(instance.vnode.el);
+		let { maxWidth, maxHeight } = window.getComputedStyle(
+			instance.vnode.el
+		);
 
 		maxWidth = Number(maxWidth.split('px').shift());
 		if (isNaN(maxWidth) || !maxWidth || isOpen.value) {

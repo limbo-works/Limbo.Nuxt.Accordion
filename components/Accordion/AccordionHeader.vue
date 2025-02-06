@@ -65,12 +65,19 @@ const panel = computed(() => {
 	return null;
 });
 
-const ariaExpanded = computed(() => panel.value?.exposed?.isOpen ? 'true' : 'false');
-const computedAriaDisabled = computed(() => panel.value?.exposed?.denyClosing ? 'true' : props.ariaDisabled);
+const ariaExpanded = computed(() =>
+	panel.value?.exposed?.isOpen ? 'true' : 'false'
+);
+const computedAriaDisabled = computed(() =>
+	panel.value?.exposed?.denyClosing ? 'true' : props.ariaDisabled
+);
 
 if (typeof window !== 'undefined') {
 	_accordionMaps.headers[props.id] = instance;
 }
+onMounted(() => {
+	_accordionMaps.headers[props.id] = instance;
+});
 
 onBeforeUnmount(() => {
 	delete _accordionMaps.headers[props.id];
@@ -97,40 +104,42 @@ function keyupHandler(e) {
 		const index = headers.findIndex((el) => el === e.target);
 
 		if (headers.length > 1) {
+			/* eslint-disable */
 			switch (e.keyCode) {
-			case 36: // HOME
-				headers[0].focus();
-				e.preventDefault();
-				break;
-			case 37: // LEFT
-				if (index > 0) {
-					headers[index - 1].focus();
-				}
-				e.preventDefault();
-				break;
-			case 38: // UP
-				if (index > 0) {
-					headers[index - 1].focus();
-				}
-				e.preventDefault();
-				break;
-			case 39: // RIGHT
-				if (index < headers.length - 1) {
-					headers[index + 1].focus();
-				}
-				e.preventDefault();
-				break;
-			case 40: // DOWN
-				if (index < headers.length - 1) {
-					headers[index + 1].focus();
-				}
-				e.preventDefault();
-				break;
-			case 35: // END
-				headers[headers.length - 1].focus();
-				e.preventDefault();
-				break;
+				case 36: // HOME
+					headers[0].focus();
+					e.preventDefault();
+					break;
+				case 37: // LEFT
+					if (index > 0) {
+						headers[index - 1].focus();
+					}
+					e.preventDefault();
+					break;
+				case 38: // UP
+					if (index > 0) {
+						headers[index - 1].focus();
+					}
+					e.preventDefault();
+					break;
+				case 39: // RIGHT
+					if (index < headers.length - 1) {
+						headers[index + 1].focus();
+					}
+					e.preventDefault();
+					break;
+				case 40: // DOWN
+					if (index < headers.length - 1) {
+						headers[index + 1].focus();
+					}
+					e.preventDefault();
+					break;
+				case 35: // END
+					headers[headers.length - 1].focus();
+					e.preventDefault();
+					break;
 			}
+			/* eslint-enable */
 		}
 	}
 }
@@ -142,15 +151,17 @@ function keydownHandler(e) {
 		accordionGroup &&
 		accordionGroup.headerList.length > 1
 	) {
+		/* eslint-disable */
 		switch (e.keyCode) {
-		case 37: // LEFT
-		case 38: // UP
-		case 39: // RIGHT
-		case 40: // DOWN
-		case 36: // HOME
-		case 35: // END
-			e.preventDefault();
+			case 37: // LEFT
+			case 38: // UP
+			case 39: // RIGHT
+			case 40: // DOWN
+			case 36: // HOME
+			case 35: // END
+				e.preventDefault();
 		}
+		/* eslint-enable */
 	}
 }
 
