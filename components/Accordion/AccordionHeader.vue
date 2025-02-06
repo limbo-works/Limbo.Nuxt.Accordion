@@ -16,180 +16,157 @@
 	</Component>
 </template>
 
-<script>
+<script setup>
 const _accordionMaps = useAccordionMaps();
 
-export default {
-	name: 'AccordionHeader',
+const instance = getCurrentInstance();
 
-	inject: {
-		accordionGroup: {
-			default: null,
-		},
-		accordionParentPanel: {
-			default: null,
-		},
-		accordionLevel: {
-			default: 0,
+const props = defineProps({
+	tag: {
+		type: String,
+		default: 'button',
+	},
+	id: {
+		type: String,
+		required: true,
+	},
+	ariaControls: {
+		type: String,
+		required: true,
+	},
+	ariaDisabled: {
+		type: String,
+		default: 'false',
+		validator(value) {
+			return ['true', 'false'].includes(value);
 		},
 	},
+	// Events
+	onFocus: Function,
+	onKeyup: Function,
+});
 
-	props: {
-		tag: {
-			type: String,
-			default: 'button',
-		},
+const accordionGroup = inject('accordionGroup', null);
+const accordionParentPanel = inject('accordionParentPanel', null);
+const accordionLevel = inject('accordionLevel', 0);
 
-		id: {
-			type: String,
-			required: true,
-		},
-		ariaControls: {
-			type: String,
-			required: true,
-		},
-		ariaDisabled: {
-			type: String,
-			default: 'false',
-			validate(value) {
-				return ['true', 'false'].includes(value);
-			},
-		},
-	},
+const hasFocus = ref(false);
 
-	data() {
-		return {
-			hasFocus: false,
-		};
-	},
+const nestingLevel = computed(() => accordionLevel.value + 1);
 
-	computed: {
-		nestingLevel() {
-			return this.accordionLevel + 1;
-		},
-
-		panel() {
-			for (const key in _accordionMaps.panels) {
-				const panel = _accordionMaps.panels[key];
-				const { id: panelId = panel?.$options?.propsData?.id } = panel;
-				if (panelId === this.ariaControls) {
-					return panel;
-				}
-			}
-			return null;
-		},
-
-		ariaExpanded() {
-			return this.panel?.isOpen ? 'true' : 'false';
-		},
-		computedAriaDisabled() {
-			return this.panel?.denyClosing ? 'true' : this.ariaDisabled;
-		},
-	},
-
-	created() {
-		if (typeof window !== 'undefined') {
-			_accordionMaps.headers[this.id] = this;
+const panel = computed(() => {
+	for (const key in _accordionMaps.panels) {
+		const panel = _accordionMaps.panels[key];
+		const panelId = panel?.props?.id;
+		if (panelId === props.ariaControls) {
+			return panel;
 		}
-		// &&
-		// 	this.$set(_accordionMaps.headers, this.id, this);
-	},
+	}
+	return null;
+});
 
-	beforeUnmount() {
-		delete _accordionMaps.headers[this.id];
-	},
+const ariaExpanded = computed(() => panel.value?.exposed?.isOpen ? 'true' : 'false');
+const computedAriaDisabled = computed(() => panel.value?.exposed?.denyClosing ? 'true' : props.ariaDisabled);
 
-	methods: {
-		clickHandler(e) {
-			if (this.computedAriaDisabled === 'true') {
+if (typeof window !== 'undefined') {
+	_accordionMaps.headers[props.id] = instance;
+}
+
+onBeforeUnmount(() => {
+	delete _accordionMaps.headers[props.id];
+});
+
+defineExpose({
+	hasFocus,
+});
+
+function clickHandler(e) {
+	if (computedAriaDisabled.value === 'true') {
+		e.preventDefault();
+		return;
+	}
+
+	if (panel.value) {
+		panel.value.exposed.toggle();
+	}
+}
+
+function keyupHandler(e) {
+	if (accordionGroup) {
+		const headers = accordionGroup.headerList.map((header) => header.$el);
+		const index = headers.findIndex((el) => el === e.target);
+
+		if (headers.length > 1) {
+			switch (e.keyCode) {
+			case 36: // HOME
+				headers[0].focus();
 				e.preventDefault();
-				return;
-			}
-
-			this.onClick?.(e);
-			if (!e?.defaultPrevented) {
-				this.panel?.toggle?.();
-			}
-		},
-		keyupHandler(e) {
-			this.onKeyup?.(e);
-			if (!e?.defaultPrevented && this.accordionGroup) {
-				const headers = (this.accordionGroup.headerList || []).map(
-					(header) => header.$el
-				);
-				const index = headers.findIndex((el) => el === e.target);
-
-				if (headers.length > 1) {
-					switch (e.keyCode) {
-					case 36: // HOME
-						headers[0].focus();
-						e.preventDefault();
-						break;
-					case 37: // LEFT
-						if (index > 0) {
-							headers[index - 1].focus();
-						}
-						e.preventDefault();
-						break;
-					case 38: // UP
-						if (index > 0) {
-							headers[index - 1].focus();
-						}
-						e.preventDefault();
-						break;
-					case 39: // RIGHT
-						if (index < headers.length - 1) {
-							headers[index + 1].focus();
-						}
-						e.preventDefault();
-						break;
-					case 40: // DOWN
-						if (index < headers.length - 1) {
-							headers[index + 1].focus();
-						}
-						e.preventDefault();
-						break;
-					case 35: // END
-						headers[headers.length - 1].focus();
-						e.preventDefault();
-						break;
-					}
+				break;
+			case 37: // LEFT
+				if (index > 0) {
+					headers[index - 1].focus();
 				}
-			}
-		},
-		keydownHandler(e) {
-			this.onKeyup?.(e);
-			if (
-				!e?.defaultPrevented &&
-				this.accordionGroup &&
-				this.accordionGroup.headerList.length > 1
-			) {
-				switch (e.keyCode) {
-				case 37: // LEFT
-				case 38: // UP
-				case 39: // RIGHT
-				case 40: // DOWN
-				case 36: // HOME
-				case 35: // END
-					e.preventDefault();
+				e.preventDefault();
+				break;
+			case 38: // UP
+				if (index > 0) {
+					headers[index - 1].focus();
 				}
+				e.preventDefault();
+				break;
+			case 39: // RIGHT
+				if (index < headers.length - 1) {
+					headers[index + 1].focus();
+				}
+				e.preventDefault();
+				break;
+			case 40: // DOWN
+				if (index < headers.length - 1) {
+					headers[index + 1].focus();
+				}
+				e.preventDefault();
+				break;
+			case 35: // END
+				headers[headers.length - 1].focus();
+				e.preventDefault();
+				break;
 			}
-		},
+		}
+	}
+}
 
-		focusHandler(e) {
-			this.onFocus?.(e);
-			if (!e?.defaultPrevented) {
-				this.hasFocus = true;
-			}
-		},
-		blurHandler(e) {
-			this.onFocus?.(e);
-			if (!e?.defaultPrevented) {
-				this.hasFocus = false;
-			}
-		},
-	},
-};
+function keydownHandler(e) {
+	props.onKeyup?.(e);
+	if (
+		!e?.defaultPrevented &&
+		accordionGroup &&
+		accordionGroup.headerList.length > 1
+	) {
+		switch (e.keyCode) {
+		case 37: // LEFT
+		case 38: // UP
+		case 39: // RIGHT
+		case 40: // DOWN
+		case 36: // HOME
+		case 35: // END
+			e.preventDefault();
+		}
+	}
+}
+
+function focusHandler(e) {
+	props.onFocus?.(e);
+	if (!e?.defaultPrevented) {
+		hasFocus.value = true;
+	}
+}
+
+function blurHandler(e) {
+	props.onFocus?.(e);
+	if (!e?.defaultPrevented) {
+		hasFocus.value = false;
+	}
+}
 </script>
 
 <style>
