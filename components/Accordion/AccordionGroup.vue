@@ -1,6 +1,3 @@
-<!--
-	Last modified: 2023/07/17 11:42:09
--->
 <template>
 	<Component :is="tag" class="c-accordion-group">
 		<slot v-bind="{ hasFocus, method: { openAll, closeAll } }" />
@@ -8,7 +5,7 @@
 </template>
 
 <script>
-import { _accordionMaps } from './index.js';
+const _accordionMaps = useAccordionMaps();
 
 export default {
 	name: 'AccordionGroup',

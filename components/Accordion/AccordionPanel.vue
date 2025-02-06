@@ -1,6 +1,3 @@
-<!--
-	Last modified: 2023/07/17 11:46:22
--->
 <template>
 	<Transition
 		v-bind="transitionProps"
@@ -33,7 +30,8 @@
 
 <script>
 import { reactive } from 'vue';
-import { _accordionMaps } from './index.js';
+
+const _accordionMaps = useAccordionMaps();
 
 const provide = reactive({
 	accordionGroup: null,
@@ -261,8 +259,6 @@ export default {
 		if (typeof window !== 'undefined') {
 			_accordionMaps.panels[this.id] = this;
 		}
-		/* typeof window !== 'undefined' &&
-			this.$set(_accordionMaps.panels, this.id, this); */
 	},
 	mounted() {
 		this.checkOpenByHash();
