@@ -4,101 +4,94 @@
 	</Component>
 </template>
 
-<script>
+<script setup>
 const _accordionMaps = useAccordionMaps();
 
-export default {
-	name: 'AccordionGroup',
+const instance = getCurrentInstance();
 
-	provide() {
-		return {
-			accordionGroup: this,
-		};
+const props = defineProps({
+	tag: {
+		type: String,
+		default: 'div',
 	},
-
-	props: {
-		tag: {
-			type: String,
-			default: 'div',
-		},
-
-		minOneOpen: {
-			type: Boolean,
-			default: false,
-		},
-		maxOneOpen: {
-			type: Boolean,
-			default: false,
-		},
+	minOneOpen: {
+		type: Boolean,
+		default: false,
 	},
-
-	computed: {
-		headerList() {
-			const list = [];
-			for (const key in _accordionMaps.headers) {
-				const header = _accordionMaps.headers[key];
-				if (header.accordionGroup === this) {
-					list.push(header);
-				}
-			}
-			return list;
-		},
-		panelList() {
-			const list = [];
-			for (const key in _accordionMaps.panels) {
-				const panel = _accordionMaps.panels[key];
-				if (panel.accordionGroup === this) {
-					list.push(panel);
-				}
-			}
-			return list;
-		},
-
-		hasFocus() {
-			return this.headerList.some((header) => header.hasFocus);
-		},
+	maxOneOpen: {
+		type: Boolean,
+		default: false,
 	},
+});
 
-	watch: {
-		panelList() {
-			this.checkMinOneOpen();
-			this.checkMaxOneOpen();
-		},
-	},
+provide('accordionGroup', instance);
 
-	created() {
-		this.checkMinOneOpen();
-		this.checkMaxOneOpen();
-	},
+const headerList = computed(() => {
+	const list = [];
+	for (const key in _accordionMaps.headers) {
+		const header = _accordionMaps.headers[key];
+		if (header.accordionGroup === instance) {
+			list.push(header);
+		}
+	}
+	return list;
+});
 
-	methods: {
-		openAll() {
-			this.panelList.forEach((panel) => panel.open?.());
-		},
-		closeAll() {
-			this.panelList.forEach((panel) => panel.close?.());
-		},
+const panelList = computed(() => {
+	const list = [];
+	for (const key in _accordionMaps.panels) {
+		const panel = _accordionMaps.panels[key];
+		if (panel.accordionGroup === instance) {
+			list.push(panel);
+		}
+	}
+	return list;
+});
 
-		checkMinOneOpen() {
-			if (
-				this.minOneOpen &&
-				this.panelList.filter((panel) => panel.isOpen).length === 0
-			) {
-				this.panelList?.[0]?.open?.();
-			}
-		},
-		checkMaxOneOpen() {
-			if (this.maxOneOpen) {
-				const filteredPanelList = this.panelList.filter(
-					(panel) => panel.isOpen
-				);
-				for (let i = 1; i < filteredPanelList.length; i++) {
-					this.panelList[i]?.close?.();
-				}
-			}
-		},
-	},
-};
+const hasFocus = computed(() => {
+	return headerList.value.some((header) => header.hasFocus);
+});
+
+watch(panelList, () => {
+	checkMinOneOpen();
+	checkMaxOneOpen();
+});
+
+checkMinOneOpen();
+checkMaxOneOpen();
+
+defineExpose({
+	openAll,
+	closeAll,
+});
+
+function openAll() {
+	panelList.value.forEach((panel) => panel.open?.());
+}
+
+function closeAll() {
+	panelList.value.forEach((panel) => panel.close?.());
+}
+
+function checkMinOneOpen() {
+	if (
+		props.minOneOpen &&
+		panelList.value.filter((panel) => panel.isOpen).length === 0
+	) {
+		panelList.value?.[0]?.open?.();
+	}
+}
+
+function checkMaxOneOpen() {
+	if (props.maxOneOpen) {
+		const filteredPanelList = panelList.value.filter(
+			(panel) => panel.isOpen
+		);
+		for (let i = 1; i < filteredPanelList.length; i++) {
+			panelList.value[i]?.close?.();
+		}
+	}
+}
 </script>
 
 <style>

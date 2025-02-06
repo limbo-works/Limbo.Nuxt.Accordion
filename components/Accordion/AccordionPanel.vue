@@ -28,334 +28,311 @@
 	</Transition>
 </template>
 
-<script>
-import { reactive } from 'vue';
-
+<script setup>
 const _accordionMaps = useAccordionMaps();
 
-const provide = reactive({
+const instance = getCurrentInstance();
+
+const route = useRoute();
+
+const emit = defineEmits(['change', 'change:open', 'change:close']);
+const props = defineProps({
+	tag: {
+		type: String,
+		default: 'div',
+	},
+	transition: {
+		type: Object,
+		default: null,
+	},
+	id: {
+		type: String,
+		required: true,
+	},
+
+	ariaLabel: {
+		type: String,
+		default: undefined,
+	},
+	ariaLabelledby: {
+		type: String,
+		default: undefined,
+	},
+
+	startOpen: {
+		type: Boolean,
+		default: false,
+	},
+	openByHash: {
+		type: [Boolean, Object],
+		default: () => ({
+			header: true,
+			panel: false,
+			withinPanel: false,
+		}),
+	},
+	openParentWhenOpened: {
+		type: Boolean,
+		default: true,
+	},
+	closeChildrenWhenClosed: {
+		type: Boolean,
+		default: true,
+	},
+});
+
+const accordionGroup = inject('accordionGroup', null);
+const accordionParentPanel = inject('accordionParentPanel', null);
+const accordionLevel = inject('accordionLevel', 0);
+
+const myProvide = reactive({
 	accordionGroup: null,
 	accordionLevel: 0,
 });
 
-export default {
-	name: 'AccordionPanel',
+provide('accordionGroup', myProvide.accordionGroup);
+provide('accordionLevel', myProvide.accordionLevel);
+provide('accordionParentPanel', instance);
 
-	inject: {
-		accordionGroup: {
-			default: null,
-		},
-		accordionParentPanel: {
-			default: null,
-		},
-		accordionLevel: {
-			default: 0,
-		},
-	},
+const isOpen = ref(props.startOpen);
+const openCloseStyles = ref(null);
+const readyForTransition = ref(props.transition?.appear);
 
-	provide() {
-		return {
-			...provide,
-			accordionParentPanel: this,
-		};
-	},
+const nestingLevel = computed(() => myProvide.accordionLevel + 1);
 
-	inheritAttrs: false,
-
-	props: {
-		tag: {
-			type: String,
-			default: 'div',
-		},
-		transition: {
-			type: Object,
-			default: null,
-		},
-		id: {
-			type: String,
-			required: true,
-		},
-
-		ariaLabel: {
-			type: String,
-			default: undefined,
-		},
-		ariaLabelledby: {
-			type: String,
-			default: undefined,
-		},
-
-		startOpen: {
-			type: Boolean,
-			default: false,
-		},
-		openByHash: {
-			type: [Boolean, Object],
-			default: () => ({
-				header: true,
-				panel: false,
-				withinPanel: false,
-			}),
-		},
-		openParentWhenOpened: {
-			type: Boolean,
-			default: true,
-		},
-		closeChildrenWhenClosed: {
-			type: Boolean,
-			default: true,
-		},
-	},
-	emits: ['change', 'change:open', 'change:close'],
-
-	data() {
-		return {
-			isOpen: this.startOpen,
-			openCloseStyles: null,
-			readyForTransition: this.transition?.appear,
-		};
-	},
-
-	computed: {
-		nestingLevel() {
-			return this.accordionLevel + 1;
-		},
-
-		header() {
-			if (this.id) {
-				for (const key in _accordionMaps.headers) {
-					const header = _accordionMaps.headers[key];
-					const {
-						ariaControls = header?.$options?.propsData?.[
-							'aria-controls'
-						],
-					} = header || {};
-					if (ariaControls === this.id) {
-						return header;
-					}
-				}
+const header = computed(() => {
+	if (props.id) {
+		for (const key in _accordionMaps.headers) {
+			const header = _accordionMaps.headers[key];
+			const {
+				ariaControls = header?.$options?.propsData?.['aria-controls'],
+			} = header || {};
+			if (ariaControls === props.id) {
+				return header;
 			}
-			return null;
-		},
-
-		childPanels() {
-			const panels = [];
-			for (const key in _accordionMaps.panels) {
-				const panel = _accordionMaps.panels[key];
-				const { accordionParentPanel } = panel;
-				if (accordionParentPanel === this) {
-					panels.push(panel);
-				}
-			}
-			return panels;
-		},
-
-		transitionProps() {
-			const obj = {};
-			const events = [
-				'beforeEnter',
-				'enter',
-				'afterEnter',
-				'enterCancelled',
-				'beforeLeave',
-				'leave',
-				'afterLeave',
-				'leaveCancelled',
-			];
-			Object.keys(this.transition || {}).forEach((key) => {
-				if (!events.includes(key)) {
-					obj[key] = this.transition[key];
-				}
-			});
-			return obj;
-		},
-		transitionListeners() {
-			const obj = {};
-			const events = [
-				'beforeEnter',
-				'enter',
-				'afterEnter',
-				'enterCancelled',
-				'beforeLeave',
-				'leave',
-				'afterLeave',
-				'leaveCancelled',
-			];
-			Object.keys(this.transition || {}).forEach((key) => {
-				if (events.includes(key)) {
-					obj[key] = this.transition[key];
-				}
-			});
-			return obj;
-		},
-
-		computedAriaLabel() {
-			return (
-				this.ariaLabel ||
-				(this.computedAriaLabelledby ? null : 'panel') ||
-				undefined
-			);
-		},
-		computedAriaLabelledby() {
-			const { id: headerId = this.header?.$options?.propsData?.id } =
-				this.header || {};
-			return (
-				this.ariaLabelledby ||
-				(this.ariaLabel ? null : headerId) ||
-				undefined
-			);
-		},
-
-		computedOpenByHash() {
-			if (typeof this.openByHash === 'boolean' && this.openByHash) {
-				return {
-					header: true,
-					panel: true,
-					withinPanel: true,
-				};
-			}
-			return this.openByHash;
-		},
-
-		denyClosing() {
-			let denyClosing = false;
-			if (this.accordionGroup) {
-				if (this.accordionGroup.minOneOpen && this.isOpen) {
-					if (
-						this.accordionGroup.panelList.filter(
-							(panel) => panel.isOpen
-						).length === 1
-					) {
-						denyClosing = true;
-					}
-				}
-			}
-			return denyClosing;
-		},
-
-		emitData() {
-			return {
-				isOpen: this.isOpen,
-				target: this.$el,
-				component: this,
-			};
-		},
-	},
-
-	watch: {
-		'$route.hash'() {
-			this.checkOpenByHash();
-		},
-
-		nestingLevel: {
-			immediate: true,
-			handler(newLevel) {
-				provide.accordionLevel = newLevel;
-			},
-		},
-	},
-
-	created() {
-		if (typeof window !== 'undefined') {
-			_accordionMaps.panels[this.id] = this;
 		}
-	},
-	mounted() {
-		this.checkOpenByHash();
+	}
+	return null;
+});
 
-		// This allows it to start open without an initial transition
-		this.$nextTick(() => {
-			this.readyForTransition = true;
-		});
-	},
-	beforeUnmount() {
-		delete _accordionMaps.panels[this.id];
-	},
-	methods: {
-		toggle() {
-			this.isOpen ? this.close() : this.open();
-		},
-		open() {
-			if (!this.isOpen) {
-				this.isOpen = true;
-				this.$emit('change', this.emitData);
-				this.$emit('change:open', this.emitData);
+const childPanels = computed(() => {
+	const panels = [];
+	for (const key in _accordionMaps.panels) {
+		const panel = _accordionMaps.panels[key];
+		const { accordionParentPanel } = panel;
+		if (accordionParentPanel === instance) {
+			panels.push(panel);
+		}
+	}
+	return panels;
+});
 
-				if (this.accordionGroup?.maxOneOpen) {
-					this.accordionGroup.panelList.forEach((panel) => {
-						panel !== this && panel.close?.();
-					});
-				}
+const transitionProps = computed(() => {
+	const obj = {};
+	const events = [
+		'beforeEnter',
+		'enter',
+		'afterEnter',
+		'enterCancelled',
+		'beforeLeave',
+		'leave',
+		'afterLeave',
+		'leaveCancelled',
+	];
+	Object.keys(props.transition || {}).forEach((key) => {
+		if (!events.includes(key)) {
+			obj[key] = props.transition[key];
+		}
+	});
+	return obj;
+});
 
-				if (this.openParentWhenOpened) {
-					this.accordionParentPanel?.open?.();
-				}
+const transitionListeners = computed(() => {
+	const obj = {};
+	const events = [
+		'beforeEnter',
+		'enter',
+		'afterEnter',
+		'enterCancelled',
+		'beforeLeave',
+		'leave',
+		'afterLeave',
+		'leaveCancelled',
+	];
+	Object.keys(props.transition || {}).forEach((key) => {
+		if (events.includes(key)) {
+			obj[key] = props.transition[key];
+		}
+	});
+	return obj;
+});
+
+const computedAriaLabel = computed(() => {
+	return props.ariaLabel || (header?.ariaLabel ? null : 'panel') || undefined;
+});
+
+const computedAriaLabelledby = computed(() => {
+	const { id: headerId = header?.$options?.propsData?.id } = header || {};
+	return (
+		props.ariaLabelledby || (props.ariaLabel ? null : headerId) || undefined
+	);
+});
+
+const computedOpenByHash = computed(() => {
+	if (typeof props.openByHash === 'boolean' && props.openByHash) {
+		return {
+			header: true,
+			panel: true,
+			withinPanel: true,
+		};
+	}
+	return props.openByHash;
+});
+
+const denyClosing = computed(() => {
+	let denyClosing = false;
+	if (accordionGroup) {
+		if (accordionGroup.minOneOpen && isOpen.value) {
+			if (
+				accordionGroup.panelList.filter((panel) => panel.isOpen)
+					.length === 1
+			) {
+				denyClosing = true;
 			}
-		},
-		close() {
-			if (this.isOpen && !this.denyClosing) {
-				this.isOpen = false;
-				this.$emit('change', this.emitData);
-				this.$emit('change:close', this.emitData);
+		}
+	}
+	return denyClosing;
+});
 
-				if (this.closeChildrenWhenClosed) {
-					this.childPanels.forEach((panel) => {
-						panel.close?.();
-					});
-				}
-			}
-		},
+const emitData = computed(() => {
+	return {
+		isOpen: isOpen.value,
+		target: instance.vnode.el,
+		component: instance,
+	};
+});
 
-		checkOpenByHash() {
-			const { hash } = this.$route;
-			if (hash && this.computedOpenByHash) {
-				const {
-					header: testHeader,
-					panel: testPanel,
-					withinPanel: testWithin,
-				} = this.computedOpenByHash;
-				const { id: headerId = this.header?.$options?.propsData?.id } =
-					this.header || {};
-				if (
-					[testHeader && `#${headerId}`, testPanel && `#${this.id}`]
-						.filter(Boolean)
-						.includes(hash) ||
-					(testWithin && this.$el?.querySelector?.(`${hash}`))
-				) {
-					this.open();
-				}
-			}
-		},
+watch(
+	() => route.hash,
+	() => {
+		checkOpenByHash();
+	}
+);
 
-		// For aiding in transition animations
-		setMaxStyles() {
-			if (this.transition) {
-				const { scrollWidth, scrollHeight } = this.$el;
-				let { maxWidth, maxHeight } = window.getComputedStyle(this.$el);
+watch(nestingLevel, () => {
+	myProvide.accordionLevel = nestingLevel.value;
+});
 
-				maxWidth = Number(maxWidth.split('px').shift());
-				if (isNaN(maxWidth) || !maxWidth || this.isOpen) {
-					maxWidth = scrollWidth;
-				}
+if (typeof window !== 'undefined') {
+	_accordionMaps.panels[props.id] = instance;
+}
+onMounted(() => {
+	_accordionMaps.panels[props.id] = instance;
 
-				maxHeight = Number(maxHeight.split('px').shift());
-				if (isNaN(maxHeight) || !maxHeight || this.isOpen) {
-					maxHeight = scrollHeight;
-				}
+	checkOpenByHash();
 
-				this.openCloseStyles = {
-					'--accordion-panel-max-width': `${maxWidth}px`,
-					'--accordion-panel-max-height': `${maxHeight}px`,
-				};
-			}
-		},
-		unsetMaxStyles() {
-			if (this.transition) {
-				this.openCloseStyles = null;
-			}
-		},
-	},
-};
+	// This allows it to start open without an initial transition
+	nextTick(() => {
+		readyForTransition.value = true;
+	});
+});
+
+onBeforeUnmount(() => {
+	delete _accordionMaps.panels[props.id];
+});
+
+defineExpose({
+	isOpen,
+	open,
+	close,
+	toggle,
+});
+
+function toggle() {
+	isOpen.value ? close() : open();
+}
+
+function open() {
+	if (!isOpen.value) {
+		isOpen.value = true;
+		emit('change', emitData.value);
+		emit('change:open', emitData.value);
+
+		if (accordionGroup?.maxOneOpen) {
+			accordionGroup.panelList.forEach((panel) => {
+				panel !== instance && panel.close?.();
+			});
+		}
+
+		if (props.openParentWhenOpened) {
+			accordionParentPanel?.open?.();
+		}
+	}
+}
+
+function close() {
+	if (isOpen.value && !denyClosing.value) {
+		isOpen.value = false;
+		emit('change', emitData.value);
+		emit('change:close', emitData.value);
+
+		if (props.closeChildrenWhenClosed) {
+			childPanels.value.forEach((panel) => {
+				panel.close?.();
+			});
+		}
+	}
+}
+
+function checkOpenByHash() {
+	const { hash } = route;
+	if (hash && computedOpenByHash.value) {
+		const {
+			header: testHeader,
+			panel: testPanel,
+			withinPanel: testWithin,
+		} = computedOpenByHash.value;
+		const { id: headerId = header?.$options?.propsData?.id } = header || {};
+		if (
+			[testHeader && `#${headerId}`, testPanel && `#${props.id}`]
+				.filter(Boolean)
+				.includes(hash) ||
+			(testWithin && instance.vnode.el?.querySelector?.(`${hash}`))
+		) {
+			open();
+		}
+	}
+}
+
+function setMaxStyles() {
+	if (props.transition) {
+		const { scrollWidth, scrollHeight } = instance.vnode.el;
+		let { maxWidth, maxHeight } = window.getComputedStyle(
+			instance.vnode.el
+		);
+
+		maxWidth = Number(maxWidth.split('px').shift());
+		if (isNaN(maxWidth) || !maxWidth || isOpen.value) {
+			maxWidth = scrollWidth;
+		}
+
+		maxHeight = Number(maxHeight.split('px').shift());
+		if (isNaN(maxHeight) || !maxHeight || isOpen.value) {
+			maxHeight = scrollHeight;
+		}
+
+		openCloseStyles.value = {
+			'--accordion-panel-max-width': `${maxWidth}px`,
+			'--accordion-panel-max-height': `${maxHeight}px`,
+		};
+	}
+}
+
+function unsetMaxStyles() {
+	if (props.transition) {
+		openCloseStyles.value = null;
+	}
+}
 </script>
 
 <style>
