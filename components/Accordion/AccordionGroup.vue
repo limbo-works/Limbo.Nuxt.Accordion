@@ -30,7 +30,7 @@ const headerList = computed(() => {
 	const list = [];
 	for (const key in _accordionMaps.headers) {
 		const header = _accordionMaps.headers[key];
-		if (header.accordionGroup === instance) {
+		if (header.exposed.accordionGroup === instance) {
 			list.push(header);
 		}
 	}
@@ -41,7 +41,7 @@ const panelList = computed(() => {
 	const list = [];
 	for (const key in _accordionMaps.panels) {
 		const panel = _accordionMaps.panels[key];
-		if (panel.accordionGroup === instance) {
+		if (panel.exposed.accordionGroup === instance) {
 			list.push(panel);
 		}
 	}
@@ -49,7 +49,7 @@ const panelList = computed(() => {
 });
 
 const hasFocus = computed(() => {
-	return headerList.value.some((header) => header.hasFocus);
+	return headerList.value.some((header) => header.exposed.hasFocus);
 });
 
 watch(panelList, () => {
@@ -61,22 +61,26 @@ checkMinOneOpen();
 checkMaxOneOpen();
 
 defineExpose({
+	minOneOpen: props.minOneOpen,
+	maxOneOpen: props.maxOneOpen,
 	openAll,
 	closeAll,
+	headerList,
+	panelList,
 });
 
 function openAll() {
-	panelList.value.forEach((panel) => panel.open?.());
+	panelList.value.forEach((panel) => panel.exposed.open?.());
 }
 
 function closeAll() {
-	panelList.value.forEach((panel) => panel.close?.());
+	panelList.value.forEach((panel) => panel.exposed.close?.());
 }
 
 function checkMinOneOpen() {
 	if (
 		props.minOneOpen &&
-		panelList.value.filter((panel) => panel.isOpen).length === 0
+		panelList.value.filter((panel) => panel.exposed.isOpen).length === 0
 	) {
 		panelList.value?.[0]?.open?.();
 	}
@@ -85,7 +89,7 @@ function checkMinOneOpen() {
 function checkMaxOneOpen() {
 	if (props.maxOneOpen) {
 		const filteredPanelList = panelList.value.filter(
-			(panel) => panel.isOpen
+			(panel) => panel.exposed.isOpen
 		);
 		for (let i = 1; i < filteredPanelList.length; i++) {
 			panelList.value[i]?.close?.();

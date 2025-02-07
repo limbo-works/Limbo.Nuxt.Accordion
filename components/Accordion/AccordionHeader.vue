@@ -69,7 +69,7 @@ const ariaExpanded = computed(() =>
 	panel.value?.exposed?.isOpen?.value ? 'true' : 'false'
 );
 const computedAriaDisabled = computed(() =>
-	panel.value?.exposed?.denyClosing ? 'true' : props.ariaDisabled
+	panel.value?.exposed?.denyClosing?.value ? 'true' : props.ariaDisabled
 );
 
 if (typeof window !== 'undefined') {
@@ -85,6 +85,11 @@ onBeforeUnmount(() => {
 
 defineExpose({
 	hasFocus,
+	nestingLevel,
+	// Injected
+	accordionGroup,
+	accordionParentPanel,
+	accordionLevel,
 });
 
 function clickHandler(e) {
@@ -100,7 +105,9 @@ function clickHandler(e) {
 
 function keyupHandler(e) {
 	if (accordionGroup) {
-		const headers = accordionGroup.headerList.map((header) => header.$el);
+		const headers = accordionGroup.exposed.headerList.map(
+			(header) => header.$el
+		);
 		const index = headers.findIndex((el) => el === e.target);
 
 		if (headers.length > 1) {
@@ -149,7 +156,7 @@ function keydownHandler(e) {
 	if (
 		!e?.defaultPrevented &&
 		accordionGroup &&
-		accordionGroup.headerList.length > 1
+		accordionGroup.exposed.headerList.length > 1
 	) {
 		/* eslint-disable */
 		switch (e.keyCode) {

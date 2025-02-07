@@ -119,7 +119,7 @@ const childPanels = computed(() => {
 	const panels = [];
 	for (const key in _accordionMaps.panels) {
 		const panel = _accordionMaps.panels[key];
-		const { accordionParentPanel } = panel;
+		const { accordionParentPanel } = panel.exposed;
 		if (accordionParentPanel === instance) {
 			panels.push(panel);
 		}
@@ -192,10 +192,11 @@ const computedOpenByHash = computed(() => {
 const denyClosing = computed(() => {
 	let denyClosing = false;
 	if (accordionGroup) {
-		if (accordionGroup.minOneOpen && isOpen.value) {
+		if (accordionGroup.exposed.minOneOpen && isOpen.value) {
 			if (
-				accordionGroup.panelList.filter((panel) => panel.isOpen)
-					.length === 1
+				accordionGroup.exposed.panelList.filter(
+					(panel) => panel.exposed.isOpen
+				).length === 1
 			) {
 				denyClosing = true;
 			}
@@ -246,6 +247,12 @@ defineExpose({
 	open,
 	close,
 	toggle,
+	denyClosing,
+
+	// Injected
+	accordionGroup,
+	accordionParentPanel,
+	accordionLevel,
 });
 
 function toggle() {
@@ -258,9 +265,9 @@ function open() {
 		emit('change', emitData.value);
 		emit('change:open', emitData.value);
 
-		if (accordionGroup?.maxOneOpen) {
-			accordionGroup.panelList.forEach((panel) => {
-				panel !== instance && panel.close?.();
+		if (accordionGroup?.exposed?.maxOneOpen) {
+			accordionGroup.exposed.panelList.forEach((panel) => {
+				panel !== instance && panel.exposed.close?.();
 			});
 		}
 
@@ -278,7 +285,7 @@ function close() {
 
 		if (props.closeChildrenWhenClosed) {
 			childPanels.value.forEach((panel) => {
-				panel.close?.();
+				panel.exposed.close?.();
 			});
 		}
 	}
