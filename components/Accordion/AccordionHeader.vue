@@ -66,7 +66,7 @@ const panel = computed(() => {
 });
 
 const ariaExpanded = computed(() =>
-	panel.value?.exposed?.isOpen ? 'true' : 'false'
+	panel.value?.exposed?.isOpen?.value ? 'true' : 'false'
 );
 const computedAriaDisabled = computed(() =>
 	panel.value?.exposed?.denyClosing ? 'true' : props.ariaDisabled
