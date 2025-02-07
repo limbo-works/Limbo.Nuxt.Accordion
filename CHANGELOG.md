@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v1.1.0...v2.0.0) (2025-02-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* updated to use composition api ([#5](https://github.com/limbo-works/Limbo.Nuxt.Accordion/issues/5))
+
+### Features
+
+* updated to use composition api ([#5](https://github.com/limbo-works/Limbo.Nuxt.Accordion/issues/5)) ([14e3c39](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/14e3c395f711a0a9f53fc8fd63854aabbe90d6ca))
+
 ## [1.1.0](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v1.0.0...v1.1.0) (2025-02-06)
 
 
