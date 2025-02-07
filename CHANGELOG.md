@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.2](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.0.1...v2.0.2) (2025-02-07)
+
+
+### Bug Fixes
+
+* more exposed data for linking together ([6650d10](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/6650d104e71596474842175e3f6862f7ca8ed087))
+
 ## [2.0.1](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.0.0...v2.0.1) (2025-02-07)
 
 
