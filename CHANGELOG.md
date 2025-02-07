@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.0.0...v2.0.1) (2025-02-07)
+
+
+### Bug Fixes
+
+* read isOpen the right way ([47c50b7](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/47c50b78d2181111e2246d160de7130420cdc8bf))
+
 ## [2.0.0](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v1.1.0...v2.0.0) (2025-02-06)
 
 
