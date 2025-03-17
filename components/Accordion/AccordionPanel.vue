@@ -87,7 +87,7 @@ const accordionLevel = inject('accordionLevel', 0);
 
 const myProvide = reactive({
 	accordionGroup: null,
-	accordionLevel: 0,
+	accordionLevel: accordionLevel + 1,
 });
 
 provide('accordionGroup', myProvide.accordionGroup);

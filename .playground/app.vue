@@ -7,6 +7,7 @@
 
 			<AccordionPanel :id="`panel-${index}`">
 				tekst {{ item }}
+				<InsideAccordion />
 			</AccordionPanel>
 		</template>
 	</AccordionGroup>
