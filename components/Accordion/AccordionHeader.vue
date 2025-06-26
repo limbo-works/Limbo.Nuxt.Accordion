@@ -43,6 +43,7 @@ const props = defineProps({
 	},
 	// Events
 	onFocus: Function,
+	onKeydown: Function,
 	onKeyup: Function,
 });
 
@@ -104,7 +105,12 @@ function clickHandler(e) {
 }
 
 function keyupHandler(e) {
-	if (accordionGroup) {
+	props.onKeyup?.(e);
+	if (
+		!e?.defaultPrevented &&
+		accordionGroup &&
+		unref(accordionGroup.exposed.headerList).length > 1
+	) {
 		const headers = unref(accordionGroup.exposed.headerList).map(
 			(header) => header.vnode.el
 		);
@@ -153,11 +159,11 @@ function keyupHandler(e) {
 }
 
 function keydownHandler(e) {
-	props.onKeyup?.(e);
+	props.onKeydown?.(e);
 	if (
 		!e?.defaultPrevented &&
 		accordionGroup &&
-		accordionGroup.exposed.headerList.length > 1
+		unref(accordionGroup.exposed.headerList).length > 1
 	) {
 		/* eslint-disable */
 		switch (e.keyCode) {
