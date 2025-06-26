@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.6](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.0.5...v2.0.6) (2025-06-26)
+
+
+### Bug Fixes
+
+* prevent default ([c8330e8](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/c8330e8cd5a254c297ad5eafcda4dd4cc948eb66))
+
 ## [2.0.5](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.0.4...v2.0.5) (2025-06-26)
 
 
