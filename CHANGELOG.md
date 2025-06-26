@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.5](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.0.4...v2.0.5) (2025-06-26)
+
+
+### Bug Fixes
+
+* corrected issue with `checkOpenByHash` ([d4d344a](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/d4d344a684ff3e521c9c868a4e68e32053cb0650))
+
 ## [2.0.4](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.0.3...v2.0.4) (2025-06-26)
 
 
