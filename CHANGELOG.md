@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.4](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.0.3...v2.0.4) (2025-06-26)
+
+
+### Bug Fixes
+
+* corrected issue related to `headerList` ([bbb4117](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/bbb411769df272be6ffae2b196ad053ef61507a7))
+
 ## [2.0.3](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.0.2...v2.0.3) (2025-03-17)
 
 
