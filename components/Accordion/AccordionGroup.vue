@@ -30,7 +30,7 @@ const headerList = computed(() => {
 	const list = [];
 	for (const key in _accordionMaps.headers) {
 		const header = _accordionMaps.headers[key];
-		if (header.exposed.accordionGroup === instance) {
+		if (header.exposed?.accordionGroup?.uid === instance?.uid) {
 			list.push(header);
 		}
 	}

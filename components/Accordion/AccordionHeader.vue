@@ -105,9 +105,10 @@ function clickHandler(e) {
 
 function keyupHandler(e) {
 	if (accordionGroup) {
-		const headers = accordionGroup.exposed.headerList.map(
-			(header) => header.$el
+		const headers = unref(accordionGroup.exposed.headerList).map(
+			(header) => header.vnode.el
 		);
+
 		const index = headers.findIndex((el) => el === e.target);
 
 		if (headers.length > 1) {
