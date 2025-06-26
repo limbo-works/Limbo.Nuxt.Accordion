@@ -104,17 +104,16 @@ const header = computed(() => {
 	if (props.id) {
 		for (const key in _accordionMaps.headers) {
 			const header = _accordionMaps.headers[key];
-			const {
-				ariaControls = header?.$options?.propsData?.['aria-controls'],
-			} = header || {};
+			const { ariaControls = header?.props?.ariaControls } = header || {};
+
 			if (ariaControls === props.id) {
 				return header;
 			}
 		}
 	}
+
 	return null;
 });
-
 const childPanels = computed(() => {
 	const panels = [];
 	for (const key in _accordionMaps.panels) {
@@ -293,13 +292,16 @@ function close() {
 
 function checkOpenByHash() {
 	const { hash } = route;
+
 	if (hash && computedOpenByHash.value) {
 		const {
 			header: testHeader,
 			panel: testPanel,
 			withinPanel: testWithin,
 		} = computedOpenByHash.value;
-		const { id: headerId = header?.$options?.propsData?.id } = header || {};
+
+		const { id: headerId = header?.value?.props?.id } = header.value || {};
+
 		if (
 			[testHeader && `#${headerId}`, testPanel && `#${props.id}`]
 				.filter(Boolean)
