@@ -265,8 +265,8 @@ function open() {
 		emit('change:open', emitData.value);
 
 		if (accordionGroup?.exposed?.maxOneOpen) {
-			accordionGroup.exposed.panelList.forEach((panel) => {
-				panel !== instance && panel.exposed.close?.();
+			accordionGroup.exposed.panelList.value.forEach((panel) => {
+				panel.uid !== instance.uid && panel.exposed.close?.();
 			});
 		}
 
