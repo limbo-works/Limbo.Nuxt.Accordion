@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.7](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.0.6...v2.0.7) (2025-08-19)
+
+
+### Bug Fixes
+
+* change max one open handling to use uid ([bb1422c](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/bb1422c09d192fb3a5dd1f9e313abf9f229c6529))
+
 ## [2.0.6](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.0.5...v2.0.6) (2025-06-26)
 
 
