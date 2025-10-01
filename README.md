@@ -71,6 +71,7 @@ export default {
 | openByHash              | If set to either true or an object then the panel will be open when the URL hash is set to the id of the panel.                                                       | default: () => ({header: true,panel: false,withinPanel: false,}) | Boolean/Object |
 | openParentWhenOpened    | Only applicable to nested accordions. When this property is set to true on a child accordion, opening the accordion will also open the parent accordion.              | true                                                             | Boolean        |
 | closeChildrenWhenClosed | Only applicable to nested accordions. When this property is set to true on a parent accordion, closing the accordion will also trigger all child accordions to close. | true                                                             | Boolean        |
+| modelValue | A boolean value can be used to control and read the open state of the panel. | undefined                                                             | Boolean        |
 
 ### Events overview
 

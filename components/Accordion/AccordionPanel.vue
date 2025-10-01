@@ -94,7 +94,12 @@ provide('accordionGroup', myProvide.accordionGroup);
 provide('accordionLevel', myProvide.accordionLevel);
 provide('accordionParentPanel', instance);
 
-const isOpen = ref(props.startOpen);
+const isOpen = defineModel({
+	type: Boolean,
+	default: undefined,
+});
+isOpen.value ??= props.startOpen;
+
 const openCloseStyles = ref(null);
 const readyForTransition = ref(props.transition?.appear);
 
