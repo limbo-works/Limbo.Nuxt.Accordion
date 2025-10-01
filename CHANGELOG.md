@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.0.7...v2.1.0) (2025-10-01)
+
+
+### Features
+
+* added modelling to accordion panels ([2a3480b](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/2a3480b39129f087ac0730fcdc4f3289bc62672a))
+
 ## [2.0.7](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.0.6...v2.0.7) (2025-08-19)
 
 
