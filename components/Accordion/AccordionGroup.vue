@@ -7,7 +7,6 @@
 <script setup>
 const { maps: _accordionMaps } = useAccordionMaps();
 
-const instance = getCurrentInstance();
 const groupUid = useId();
 
 const props = defineProps({
