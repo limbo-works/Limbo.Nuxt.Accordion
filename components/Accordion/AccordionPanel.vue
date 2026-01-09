@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-const { maps: _accordionMaps } = useAccordionMaps();
+const { maps: _accordionMaps, cleanup } = useAccordionMaps();
 
 const instance = getCurrentInstance();
 
@@ -243,7 +243,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-	delete _accordionMaps.panels[props.id];
+	cleanup('panels', props.id);
 });
 
 defineExpose({
