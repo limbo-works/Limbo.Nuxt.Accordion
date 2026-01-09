@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.2.0](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.1.0...v2.2.0) (2026-01-09)
+
+
+### Features
+
+* added better playground ([1958811](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/1958811be770599396518911a2cc582a098b948a))
+* cleanup and fixing further ([2e8a759](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/2e8a75975a49593e1cc604c11995df2969b9df26))
+* got some basic things working again ([66febea](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/66febea009f19e13ff1dc55cca50ce09d36ac25c))
+* made use of cleanup function ([110a340](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/110a340935c45b51903641db770664f8c33de0fb))
+* rewrote to not use direct instance references ([6c7a558](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/6c7a558f18e4b5161d43656874e91c0bcaa0c4c3))
+
+
+### Bug Fixes
+
+* div in p tag ([edb1d4c](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/edb1d4c057776c962ad850f9eb9cc3a4ce17ecd6))
+* made header navigation work again ([585ed06](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/585ed06f93b3dadb2d72703c4f24df33dc26eb0f))
+* unused instance ([d48dcf4](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/d48dcf4b2a342f50ee9fc25a9d522f79aa981727))
+* wrong references in cleanup ([1cce82a](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/1cce82a4a1ace4c7e7163e9d05fda9b01b5bb80a))
+
 ## [2.1.0](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.0.7...v2.1.0) (2025-10-01)
 
 
