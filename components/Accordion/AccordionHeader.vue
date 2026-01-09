@@ -132,11 +132,7 @@ function clickHandler(e) {
 
 function keyupHandler(e) {
 	props.onKeyup?.(e);
-	if (
-		!e?.defaultPrevented &&
-		accordionGroup &&
-		accordionGroup.headerList?.value?.length > 1
-	) {
+	if (!e?.defaultPrevented && accordionGroup) {
 		// Get headers from the maps instead
 		const headers = [];
 		for (const key in _accordionMaps.value.headers) {
@@ -146,72 +142,81 @@ function keyupHandler(e) {
 			}
 		}
 
-		const headerElements = headers.map((headerData) => {
-			// Find the DOM element for each header
-			return document.getElementById(headerData.id);
-		}).filter(Boolean);
+		if (headers.length > 1) {
+			const headerElements = headers.map((headerData) => {
+				// Find the DOM element for each header
+				return document.getElementById(headerData.id);
+			}).filter(Boolean);
 
-		const index = headerElements.findIndex((el) => el === e.target);
+			const index = headerElements.findIndex((el) => el === e.target);
 
-		if (headerElements.length > 1) {
-			/* eslint-disable */
-			switch (e.keyCode) {
-				case 36: // HOME
-					headerElements[0].focus();
-					e.preventDefault();
-					break;
-				case 37: // LEFT
-					if (index > 0) {
-						headerElements[index - 1].focus();
-					}
-					e.preventDefault();
-					break;
-				case 38: // UP
-					if (index > 0) {
-						headerElements[index - 1].focus();
-					}
-					e.preventDefault();
-					break;
-				case 39: // RIGHT
-					if (index < headerElements.length - 1) {
-						headerElements[index + 1].focus();
-					}
-					e.preventDefault();
-					break;
-				case 40: // DOWN
-					if (index < headerElements.length - 1) {
-						headerElements[index + 1].focus();
-					}
-					e.preventDefault();
-					break;
-				case 35: // END
-					headerElements[headerElements.length - 1].focus();
-					e.preventDefault();
-					break;
+			if (headerElements.length > 1) {
+				/* eslint-disable */
+				switch (e.keyCode) {
+					case 36: // HOME
+						headerElements[0].focus();
+						e.preventDefault();
+						break;
+					case 37: // LEFT
+						if (index > 0) {
+							headerElements[index - 1].focus();
+						}
+						e.preventDefault();
+						break;
+					case 38: // UP
+						if (index > 0) {
+							headerElements[index - 1].focus();
+						}
+						e.preventDefault();
+						break;
+					case 39: // RIGHT
+						if (index < headerElements.length - 1) {
+							headerElements[index + 1].focus();
+						}
+						e.preventDefault();
+						break;
+					case 40: // DOWN
+						if (index < headerElements.length - 1) {
+							headerElements[index + 1].focus();
+						}
+						e.preventDefault();
+						break;
+					case 35: // END
+						headerElements[headerElements.length - 1].focus();
+						e.preventDefault();
+						break;
+				}
+				/* eslint-enable */
 			}
-			/* eslint-enable */
 		}
 	}
 }
 
 function keydownHandler(e) {
 	props.onKeydown?.(e);
-	if (
-		!e?.defaultPrevented &&
-		accordionGroup &&
-		accordionGroup.headerList?.value?.length > 1
-	) {
-		/* eslint-disable */
-		switch (e.keyCode) {
-			case 37: // LEFT
-			case 38: // UP
-			case 39: // RIGHT
-			case 40: // DOWN
-			case 36: // HOME
-			case 35: // END
-				e.preventDefault();
+	if (!e?.defaultPrevented && accordionGroup) {
+		// Check if there are multiple headers in this group
+		const headers = [];
+		for (const key in _accordionMaps.value.headers) {
+			const headerData = _accordionMaps.value.headers[key];
+			if (headerData?.groupUid === accordionGroup?.uid) {
+				headers.push(headerData);
+			}
 		}
-		/* eslint-enable */
+
+		if (headers.length > 1) {
+			/* eslint-disable */
+			switch (e.keyCode) {
+				case 37: // LEFT
+				case 38: // UP
+				case 39: // RIGHT
+				case 40: // DOWN
+				case 36: // HOME
+				case 35: // END
+					e.preventDefault();
+			}
+			/* eslint-enable */
+		}
 	}
 }
 
