@@ -76,9 +76,6 @@ onBeforeUnmount(() => {
 		Object.keys(_accordionMaps.value.headers).forEach(key => {
 			if (_accordionMaps.value.headers[key]?.groupUid === currentGroupUid) {
 				delete _accordionMaps.value.headers[key];
-				if (_accordionMaps.value?.instances) {
-					_accordionMaps.value.instances.delete(`headers:${key}`);
-				}
 			}
 		});
 	}
@@ -88,9 +85,6 @@ onBeforeUnmount(() => {
 		Object.keys(_accordionMaps.value.panels).forEach(key => {
 			if (_accordionMaps.value.panels[key]?.groupUid === currentGroupUid) {
 				delete _accordionMaps.value.panels[key];
-				if (_accordionMaps.value?.instances) {
-					_accordionMaps.value.instances.delete(`panels:${key}`);
-				}
 			}
 		});
 	}
