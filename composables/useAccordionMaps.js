@@ -9,6 +9,10 @@ export default function useAccordionMaps() {
 		if (accordionMaps.value[type]?.[id]) {
 			delete accordionMaps.value[type][id];
 		}
+		// Also cleanup from instances map if it exists
+		if (accordionMaps.value.instances) {
+			accordionMaps.value.instances.delete(`${type}:${id}`);
+		}
 	};
 
 	// Cleanup on scope dispose

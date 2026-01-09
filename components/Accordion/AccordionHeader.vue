@@ -82,6 +82,10 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
 	cleanup('headers', props.id);
+	// Additional cleanup to prevent memory leaks
+	if (_accordionMaps.value?.instances) {
+		_accordionMaps.value.instances.delete(`headers:${props.id}`);
+	}
 });
 
 defineExpose({

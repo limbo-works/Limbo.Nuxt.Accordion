@@ -60,6 +60,35 @@ watch(panelList, () => {
 checkMinOneOpen();
 checkMaxOneOpen();
 
+// Cleanup when group is destroyed to prevent memory leaks
+onBeforeUnmount(() => {
+	const currentGroupUid = groupUid;
+
+	// Clean up all headers belonging to this group
+	if (_accordionMaps.value?.headers) {
+		Object.keys(_accordionMaps.value.headers).forEach(key => {
+			if (_accordionMaps.value.headers[key]?.groupUid === currentGroupUid) {
+				delete _accordionMaps.value.headers[key];
+				if (_accordionMaps.value?.instances) {
+					_accordionMaps.value.instances.delete(`headers:${key}`);
+				}
+			}
+		});
+	}
+
+	// Clean up all panels belonging to this group
+	if (_accordionMaps.value?.panels) {
+		Object.keys(_accordionMaps.value.panels).forEach(key => {
+			if (_accordionMaps.value.panels[key]?.groupUid === currentGroupUid) {
+				delete _accordionMaps.value.panels[key];
+				if (_accordionMaps.value?.instances) {
+					_accordionMaps.value.instances.delete(`panels:${key}`);
+				}
+			}
+		});
+	}
+});
+
 defineExpose({
 	minOneOpen: computed(() => props.minOneOpen),
 	maxOneOpen: computed(() => props.maxOneOpen),
@@ -70,11 +99,11 @@ defineExpose({
 });
 
 function openAll() {
-	panelList.value.forEach((panel) => panel.exposed.open?.());
+	panelList.value.slice().reverse().forEach((panel) => panel.exposed.open?.());
 }
 
 function closeAll() {
-	panelList.value.forEach((panel) => panel.exposed.close?.());
+	panelList.value.slice().reverse().forEach((panel) => panel.exposed.close?.());
 }
 
 function checkMinOneOpen() {

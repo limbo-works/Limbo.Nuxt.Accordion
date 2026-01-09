@@ -231,10 +231,13 @@ watch(nestingLevel, () => {
 if (typeof window !== 'undefined') {
 	_accordionMaps.panels[props.id] = instance;
 }
+
+let hashFrameRequest;
 onMounted(() => {
 	_accordionMaps.panels[props.id] = instance;
 
 	checkOpenByHash();
+	window.addEventListener('hashchange', checkOpenByHash);
 
 	// This allows it to start open without an initial transition
 	nextTick(() => {
@@ -243,7 +246,17 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+	window.removeEventListener('hashchange', checkOpenByHash);
+	if (hashFrameRequest) {
+		cancelAnimationFrame(hashFrameRequest);
+	}
+
 	cleanup('panels', props.id);
+
+	// Additional cleanup to prevent memory leaks
+	if (_accordionMaps.value?.instances) {
+		_accordionMaps.value.instances.delete(`panels:${props.id}`);
+	}
 });
 
 defineExpose({
@@ -296,26 +309,29 @@ function close() {
 }
 
 function checkOpenByHash() {
-	const { hash } = route;
+	cancelAnimationFrame(hashFrameRequest);
+	hashFrameRequest = requestAnimationFrame(() => {
+		const { hash } = route;
 
-	if (hash && computedOpenByHash.value) {
-		const {
-			header: testHeader,
-			panel: testPanel,
-			withinPanel: testWithin,
-		} = computedOpenByHash.value;
+		if (hash && computedOpenByHash.value) {
+			const {
+				header: testHeader,
+				panel: testPanel,
+				withinPanel: testWithin,
+			} = computedOpenByHash.value;
 
-		const { id: headerId = header?.value?.props?.id } = header.value || {};
+			const { id: headerId = header?.value?.props?.id } = header.value || {};
 
-		if (
-			[testHeader && `#${headerId}`, testPanel && `#${props.id}`]
-				.filter(Boolean)
-				.includes(hash) ||
+			if (
+				[testHeader && `#${headerId}`, testPanel && `#${props.id}`]
+					.filter(Boolean)
+					.includes(hash) ||
 			(testWithin && instance.vnode.el?.querySelector?.(`${hash}`))
-		) {
-			open();
+			) {
+				open();
+			}
 		}
-	}
+	});
 }
 
 function setMaxStyles() {
