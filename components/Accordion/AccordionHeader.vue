@@ -17,9 +17,10 @@
 </template>
 
 <script setup>
-const { maps: _accordionMaps, cleanup } = useAccordionMaps();
+const { maps: _accordionMaps, registerHeader } = useAccordionMaps();
 
 const instance = getCurrentInstance();
+const mapId = useId();
 
 const props = defineProps({
 	tag: {
@@ -56,36 +57,57 @@ const hasFocus = ref(false);
 const nestingLevel = computed(() => accordionLevel.value + 1);
 
 const panel = computed(() => {
-	for (const key in _accordionMaps.panels) {
-		const panel = _accordionMaps.panels[key];
-		const panelId = panel?.props?.id;
-		if (panelId === props.ariaControls) {
-			return panel;
+	for (const key in _accordionMaps.value.panels) {
+		const panelData = _accordionMaps.value.panels[key];
+		if (panelData?.id === props.ariaControls) {
+			return panelData;
 		}
 	}
 	return null;
 });
 
 const ariaExpanded = computed(() =>
-	panel.value?.exposed?.isOpen?.value ? 'true' : 'false'
+	panel.value?.isOpen ? 'true' : 'false'
 );
 const computedAriaDisabled = computed(() =>
-	panel.value?.exposed?.denyClosing?.value ? 'true' : props.ariaDisabled
+	panel.value?.denyClosing ? 'true' : props.ariaDisabled
 );
 
 if (typeof window !== 'undefined') {
-	_accordionMaps.headers[props.id] = instance;
+	registerHeader(mapId, {
+		id: props.id,
+		ariaControls: props.ariaControls,
+		groupUid: accordionGroup?.uid,
+		parentId: accordionParentPanel?.mapId,
+		level: accordionLevel,
+		hasFocus: hasFocus,
+		nestingLevel: nestingLevel,
+		methods: {
+			focus: () => instance?.refs?.button?.focus?.(),
+			click: clickHandler,
+		}
+	});
 }
+
 onMounted(() => {
-	_accordionMaps.headers[props.id] = instance;
+	registerHeader(mapId, {
+		id: props.id,
+		ariaControls: props.ariaControls,
+		groupUid: accordionGroup?.uid,
+		parentId: accordionParentPanel?.mapId,
+		level: accordionLevel,
+		hasFocus: hasFocus,
+		nestingLevel: nestingLevel,
+		methods: {
+			focus: () => instance?.refs?.button?.focus?.(),
+			click: clickHandler,
+		}
+	});
 });
 
 onBeforeUnmount(() => {
-	cleanup('headers', props.id);
-	// Additional cleanup to prevent memory leaks
-	if (_accordionMaps.value?.instances) {
-		_accordionMaps.value.instances.delete(`headers:${props.id}`);
-	}
+	const headerData = _accordionMaps.value.headers[mapId];
+	headerData?.cleanup?.();
 });
 
 defineExpose({
@@ -104,7 +126,7 @@ function clickHandler(e) {
 	}
 
 	if (panel.value) {
-		panel.value.exposed.toggle();
+		panel.value.methods?.toggle?.();
 	}
 }
 
@@ -113,47 +135,57 @@ function keyupHandler(e) {
 	if (
 		!e?.defaultPrevented &&
 		accordionGroup &&
-		unref(accordionGroup.exposed.headerList).length > 1
+		accordionGroup.headerList?.value?.length > 1
 	) {
-		const headers = unref(accordionGroup.exposed.headerList).map(
-			(header) => header.vnode.el
-		);
+		// Get headers from the maps instead
+		const headers = [];
+		for (const key in _accordionMaps.value.headers) {
+			const headerData = _accordionMaps.value.headers[key];
+			if (headerData?.groupUid === accordionGroup?.uid) {
+				headers.push(headerData);
+			}
+		}
 
-		const index = headers.findIndex((el) => el === e.target);
+		const headerElements = headers.map((headerData) => {
+			// Find the DOM element for each header
+			return document.getElementById(headerData.id);
+		}).filter(Boolean);
 
-		if (headers.length > 1) {
+		const index = headerElements.findIndex((el) => el === e.target);
+
+		if (headerElements.length > 1) {
 			/* eslint-disable */
 			switch (e.keyCode) {
 				case 36: // HOME
-					headers[0].focus();
+					headerElements[0].focus();
 					e.preventDefault();
 					break;
 				case 37: // LEFT
 					if (index > 0) {
-						headers[index - 1].focus();
+						headerElements[index - 1].focus();
 					}
 					e.preventDefault();
 					break;
 				case 38: // UP
 					if (index > 0) {
-						headers[index - 1].focus();
+						headerElements[index - 1].focus();
 					}
 					e.preventDefault();
 					break;
 				case 39: // RIGHT
-					if (index < headers.length - 1) {
-						headers[index + 1].focus();
+					if (index < headerElements.length - 1) {
+						headerElements[index + 1].focus();
 					}
 					e.preventDefault();
 					break;
 				case 40: // DOWN
-					if (index < headers.length - 1) {
-						headers[index + 1].focus();
+					if (index < headerElements.length - 1) {
+						headerElements[index + 1].focus();
 					}
 					e.preventDefault();
 					break;
 				case 35: // END
-					headers[headers.length - 1].focus();
+					headerElements[headerElements.length - 1].focus();
 					e.preventDefault();
 					break;
 			}
@@ -167,7 +199,7 @@ function keydownHandler(e) {
 	if (
 		!e?.defaultPrevented &&
 		accordionGroup &&
-		unref(accordionGroup.exposed.headerList).length > 1
+		accordionGroup.headerList?.value?.length > 1
 	) {
 		/* eslint-disable */
 		switch (e.keyCode) {

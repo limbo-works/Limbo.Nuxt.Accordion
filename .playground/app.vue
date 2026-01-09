@@ -208,7 +208,7 @@
 			<div class="hash-links">
 				<a href="#hash-panel-1">Open Panel 1</a>
 				<a href="#hash-header-2">Open Panel 2 (via header)</a>
-				<a href="#hash-panel-3">Open Panel 3</a>
+				<a href="#hash-panel-3">Open Panel 3 (should not work)</a>
 				<a href="#nested-target">Open Panel 4 (nested target)</a>
 			</div>
 

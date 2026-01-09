@@ -29,9 +29,10 @@
 </template>
 
 <script setup>
-const { maps: _accordionMaps, cleanup } = useAccordionMaps();
+const { maps: _accordionMaps, registerPanel } = useAccordionMaps();
 
 const instance = getCurrentInstance();
+const mapId = useId();
 
 const route = useRoute();
 
@@ -107,25 +108,23 @@ const nestingLevel = computed(() => myProvide.accordionLevel + 1);
 
 const header = computed(() => {
 	if (props.id) {
-		for (const key in _accordionMaps.headers) {
-			const header = _accordionMaps.headers[key];
-			const { ariaControls = header?.props?.ariaControls } = header || {};
-
-			if (ariaControls === props.id) {
-				return header;
+		for (const key in _accordionMaps.value.headers) {
+			const headerData = _accordionMaps.value.headers[key];
+			if (headerData?.ariaControls === props.id) {
+				return headerData;
 			}
 		}
 	}
-
 	return null;
 });
 const childPanels = computed(() => {
 	const panels = [];
-	for (const key in _accordionMaps.panels) {
-		const panel = _accordionMaps.panels[key];
-		const { accordionParentPanel } = panel.exposed;
-		if (accordionParentPanel === instance) {
-			panels.push(panel);
+	if (_accordionMaps.value?.panels) {
+		for (const key in _accordionMaps.value.panels) {
+			const panelData = _accordionMaps.value.panels[key];
+			if (panelData?.parentId === mapId) {
+				panels.push(panelData);
+			}
 		}
 	}
 	return panels;
@@ -176,7 +175,7 @@ const computedAriaLabel = computed(() => {
 });
 
 const computedAriaLabelledby = computed(() => {
-	const { id: headerId = header?.$options?.propsData?.id } = header || {};
+	const headerId = header.value?.id;
 	return (
 		props.ariaLabelledby || (props.ariaLabel ? null : headerId) || undefined
 	);
@@ -195,15 +194,19 @@ const computedOpenByHash = computed(() => {
 
 const denyClosing = computed(() => {
 	let denyClosing = false;
-	if (accordionGroup) {
-		if (accordionGroup.exposed.minOneOpen.value && isOpen.value) {
-			if (
-				accordionGroup.exposed.panelList.value.filter(
-					(panel) => panel.exposed.isOpen.value
-				).length === 1
-			) {
-				denyClosing = true;
+	if (accordionGroup?.minOneOpen?.value && isOpen.value) {
+		// Count open panels in the same group using data lookup
+		let openCount = 0;
+		if (_accordionMaps.value?.panels) {
+			for (const key in _accordionMaps.value.panels) {
+				const panelData = _accordionMaps.value.panels[key];
+				if (panelData?.groupUid === accordionGroup?.uid && panelData?.isOpen?.value) {
+					openCount++;
+				}
 			}
+		}
+		if (openCount === 1) {
+			denyClosing = true;
 		}
 	}
 	return denyClosing;
@@ -229,12 +232,36 @@ watch(nestingLevel, () => {
 });
 
 if (typeof window !== 'undefined') {
-	_accordionMaps.panels[props.id] = instance;
+	registerPanel(mapId, {
+		id: props.id,
+		groupUid: accordionGroup?.uid,
+		parentId: accordionParentPanel?.mapId,
+		level: accordionLevel,
+		isOpen: isOpen,
+		denyClosing: denyClosing,
+		methods: {
+			open,
+			close,
+			toggle,
+		}
+	});
 }
 
 let hashFrameRequest;
 onMounted(() => {
-	_accordionMaps.panels[props.id] = instance;
+	registerPanel(mapId, {
+		id: props.id,
+		groupUid: accordionGroup?.uid,
+		parentId: accordionParentPanel?.mapId,
+		level: accordionLevel,
+		isOpen: isOpen,
+		denyClosing: denyClosing,
+		methods: {
+			open,
+			close,
+			toggle,
+		}
+	});
 
 	checkOpenByHash();
 	window.addEventListener('hashchange', checkOpenByHash);
@@ -251,12 +278,8 @@ onBeforeUnmount(() => {
 		cancelAnimationFrame(hashFrameRequest);
 	}
 
-	cleanup('panels', props.id);
-
-	// Additional cleanup to prevent memory leaks
-	if (_accordionMaps.value?.instances) {
-		_accordionMaps.value.instances.delete(`panels:${props.id}`);
-	}
+	const panelData = _accordionMaps.value.panels[mapId];
+	panelData?.cleanup?.();
 });
 
 defineExpose({
@@ -282,14 +305,25 @@ function open() {
 		emit('change', emitData.value);
 		emit('change:open', emitData.value);
 
-		if (accordionGroup?.exposed?.maxOneOpen.value) {
-			accordionGroup.exposed.panelList.value.forEach((panel) => {
-				panel.uid !== instance.uid && panel.exposed.close?.();
-			});
+		// Check maxOneOpen from accordion group
+		if (accordionGroup?.maxOneOpen?.value) {
+			// Close other panels in the same group using data lookup
+			if (_accordionMaps.value?.panels) {
+				for (const key in _accordionMaps.value.panels) {
+					const panelData = _accordionMaps.value.panels[key];
+					if (panelData && panelData.groupUid === accordionGroup?.uid &&
+						panelData.id !== props.id) {
+						panelData.methods?.close?.();
+					}
+				}
+			}
 		}
 
-		if (props.openParentWhenOpened) {
-			accordionParentPanel?.open?.();
+		if (props.openParentWhenOpened && accordionParentPanel) {
+			// Find parent panel data and call its open method
+			const parentPanelData = Object.values(_accordionMaps.value.panels || {})
+				.find(p => p.id === accordionParentPanel.mapId);
+			parentPanelData?.methods?.open?.();
 		}
 	}
 }
@@ -301,8 +335,8 @@ function close() {
 		emit('change:close', emitData.value);
 
 		if (props.closeChildrenWhenClosed) {
-			childPanels.value.forEach((panel) => {
-				panel.exposed.close?.();
+			childPanels.value?.forEach?.((panelData) => {
+				panelData?.methods?.close?.();
 			});
 		}
 	}
@@ -320,7 +354,7 @@ function checkOpenByHash() {
 				withinPanel: testWithin,
 			} = computedOpenByHash.value;
 
-			const { id: headerId = header?.value?.props?.id } = header.value || {};
+			const headerId = header.value?.id;
 
 			if (
 				[testHeader && `#${headerId}`, testPanel && `#${props.id}`]

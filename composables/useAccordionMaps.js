@@ -4,15 +4,32 @@ export default function useAccordionMaps() {
 		panels: {},
 	}));
 
-	// Return cleanup function separately to avoid serialization issues
 	const cleanup = (type, id) => {
 		if (accordionMaps.value[type]?.[id]) {
 			delete accordionMaps.value[type][id];
 		}
-		// Also cleanup from instances map if it exists
-		if (accordionMaps.value.instances) {
-			accordionMaps.value.instances.delete(`${type}:${id}`);
+	};
+
+	const updateComponent = (type, id, updates) => {
+		if (accordionMaps.value[type][id]) {
+			Object.assign(accordionMaps.value[type][id], updates);
 		}
+	};
+
+	const registerHeader = (id, data) => {
+		accordionMaps.value.headers[id] = {
+			...data,
+			update: (updates) => updateComponent('headers', id, updates),
+			cleanup: () => cleanup('headers', id),
+		};
+	};
+
+	const registerPanel = (id, data) => {
+		accordionMaps.value.panels[id] = {
+			...data,
+			update: (updates) => updateComponent('panels', id, updates),
+			cleanup: () => cleanup('panels', id),
+		};
 	};
 
 	// Cleanup on scope dispose
@@ -24,7 +41,8 @@ export default function useAccordionMaps() {
 	});
 
 	return {
-		maps: accordionMaps.value,
-		cleanup
+		maps: accordionMaps,
+		registerHeader,
+		registerPanel,
 	};
 }

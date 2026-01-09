@@ -18,6 +18,7 @@ const accordionGroup = inject('accordionGroup', null);
 
 <style scoped>
 .nesting-info {
+	display: block;
 	padding: 0.75rem;
 	background: #f8f9fa;
 	border: 1px solid #dee2e6;

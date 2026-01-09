@@ -8,6 +8,7 @@
 const { maps: _accordionMaps } = useAccordionMaps();
 
 const instance = getCurrentInstance();
+const groupUid = useId();
 
 const props = defineProps({
 	tag: {
@@ -24,14 +25,14 @@ const props = defineProps({
 	},
 });
 
-provide('accordionGroup', instance);
+provide('accordionGroup', { uid: groupUid, minOneOpen: computed(() => props.minOneOpen), maxOneOpen: computed(() => props.maxOneOpen) });
 
 const headerList = computed(() => {
 	const list = [];
-	for (const key in _accordionMaps.headers) {
-		const header = _accordionMaps.headers[key];
-		if (header.exposed?.accordionGroup?.uid === instance?.uid) {
-			list.push(header);
+	for (const key in _accordionMaps.value.headers) {
+		const headerData = _accordionMaps.value.headers[key];
+		if (headerData?.groupUid === groupUid) {
+			list.push(headerData);
 		}
 	}
 	return list;
@@ -39,23 +40,29 @@ const headerList = computed(() => {
 
 const panelList = computed(() => {
 	const list = [];
-	for (const key in _accordionMaps.panels) {
-		const panel = _accordionMaps.panels[key];
-		if (panel.exposed.accordionGroup === instance) {
-			list.push(panel);
+	for (const key in _accordionMaps.value.panels) {
+		const panelData = _accordionMaps.value.panels[key];
+		if (panelData?.groupUid === groupUid) {
+			list.push(panelData);
 		}
 	}
 	return list;
 });
 
 const hasFocus = computed(() => {
-	return headerList.value.some((header) => header.exposed.hasFocus);
+	return headerList.value.some((headerData) => headerData.hasFocus?.value);
 });
 
 watch(panelList, () => {
 	checkMinOneOpen();
 	checkMaxOneOpen();
 });
+
+// Also watch for changes in panel open states
+watch(() => panelList.value.map(p => p.isOpen?.value), () => {
+	checkMinOneOpen();
+	checkMaxOneOpen();
+}, { deep: true });
 
 checkMinOneOpen();
 checkMaxOneOpen();
@@ -99,29 +106,29 @@ defineExpose({
 });
 
 function openAll() {
-	panelList.value.slice().reverse().forEach((panel) => panel.exposed.open?.());
+	panelList.value.slice().reverse().forEach((panelData) => panelData.methods?.open?.());
 }
 
 function closeAll() {
-	panelList.value.slice().reverse().forEach((panel) => panel.exposed.close?.());
+	panelList.value.slice().reverse().forEach((panelData) => panelData.methods?.close?.());
 }
 
 function checkMinOneOpen() {
 	if (
 		props.minOneOpen &&
-		panelList.value.filter((panel) => panel.exposed.isOpen.value).length === 0
+		panelList.value.filter((panelData) => panelData.isOpen?.value).length === 0
 	) {
-		panelList.value?.[0]?.exposed.open?.();
+		panelList.value?.[0]?.methods?.open?.();
 	}
 }
 
 function checkMaxOneOpen() {
 	if (props.maxOneOpen) {
 		const filteredPanelList = panelList.value.filter(
-			(panel) => panel.exposed.isOpen.value
+			(panelData) => panelData.isOpen?.value
 		);
 		for (let i = 1; i < filteredPanelList.length; i++) {
-			filteredPanelList[i]?.exposed.close?.();
+			filteredPanelList[i]?.methods?.close?.();
 		}
 	}
 }
