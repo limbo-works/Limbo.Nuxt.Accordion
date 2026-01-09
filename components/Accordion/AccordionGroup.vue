@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-const _accordionMaps = useAccordionMaps();
+const { maps: _accordionMaps } = useAccordionMaps();
 
 const instance = getCurrentInstance();
 
@@ -61,8 +61,8 @@ checkMinOneOpen();
 checkMaxOneOpen();
 
 defineExpose({
-	minOneOpen: props.minOneOpen,
-	maxOneOpen: props.maxOneOpen,
+	minOneOpen: computed(() => props.minOneOpen),
+	maxOneOpen: computed(() => props.maxOneOpen),
 	openAll,
 	closeAll,
 	headerList,
@@ -80,19 +80,19 @@ function closeAll() {
 function checkMinOneOpen() {
 	if (
 		props.minOneOpen &&
-		panelList.value.filter((panel) => panel.exposed.isOpen).length === 0
+		panelList.value.filter((panel) => panel.exposed.isOpen.value).length === 0
 	) {
-		panelList.value?.[0]?.open?.();
+		panelList.value?.[0]?.exposed.open?.();
 	}
 }
 
 function checkMaxOneOpen() {
 	if (props.maxOneOpen) {
 		const filteredPanelList = panelList.value.filter(
-			(panel) => panel.exposed.isOpen
+			(panel) => panel.exposed.isOpen.value
 		);
 		for (let i = 1; i < filteredPanelList.length; i++) {
-			panelList.value[i]?.close?.();
+			filteredPanelList[i]?.exposed.close?.();
 		}
 	}
 }

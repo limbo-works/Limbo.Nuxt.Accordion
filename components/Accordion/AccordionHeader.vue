@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-const _accordionMaps = useAccordionMaps();
+const { maps: _accordionMaps } = useAccordionMaps();
 
 const instance = getCurrentInstance();
 

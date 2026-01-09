@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-const _accordionMaps = useAccordionMaps();
+const { maps: _accordionMaps } = useAccordionMaps();
 
 const instance = getCurrentInstance();
 
@@ -196,10 +196,10 @@ const computedOpenByHash = computed(() => {
 const denyClosing = computed(() => {
 	let denyClosing = false;
 	if (accordionGroup) {
-		if (accordionGroup.exposed.minOneOpen && isOpen.value) {
+		if (accordionGroup.exposed.minOneOpen.value && isOpen.value) {
 			if (
-				accordionGroup.exposed.panelList.filter(
-					(panel) => panel.exposed.isOpen
+				accordionGroup.exposed.panelList.value.filter(
+					(panel) => panel.exposed.isOpen.value
 				).length === 1
 			) {
 				denyClosing = true;
@@ -269,7 +269,7 @@ function open() {
 		emit('change', emitData.value);
 		emit('change:open', emitData.value);
 
-		if (accordionGroup?.exposed?.maxOneOpen) {
+		if (accordionGroup?.exposed?.maxOneOpen.value) {
 			accordionGroup.exposed.panelList.value.forEach((panel) => {
 				panel.uid !== instance.uid && panel.exposed.close?.();
 			});
