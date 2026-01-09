@@ -1,5 +1,5 @@
 <template>
-	<div class="nesting-info">
+	<span class="nesting-info">
 		<strong>Nesting Level:</strong> {{ accordionLevel }}
 		<br />
 		<small>
@@ -7,7 +7,7 @@
 			<br />
 			<strong>Accordion Group:</strong> {{ accordionGroup ? 'Present' : 'None' }}
 		</small>
-	</div>
+	</span>
 </template>
 
 <script setup>
