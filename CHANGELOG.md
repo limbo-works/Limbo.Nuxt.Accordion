@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.2.0...v2.2.1) (2026-01-16)
+
+
+### Bug Fixes
+
+* improved memory cleanup ([17a251f](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/17a251f5d6faee256ed69291f20193fa7ee8c62a))
+
 ## [2.2.0](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.1.0...v2.2.0) (2026-01-09)
 
 
