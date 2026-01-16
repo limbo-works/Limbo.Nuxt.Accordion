@@ -1,4 +1,5 @@
 export default function useAccordionMaps() {
+	// For SSR, avoid global state accumulation
 	const accordionMaps = useState(() => ({
 		headers: {},
 		panels: {},
@@ -32,17 +33,38 @@ export default function useAccordionMaps() {
 		};
 	};
 
-	// Cleanup on scope dispose
-	onScopeDispose(() => {
+	// Enhanced cleanup for SSR
+	const cleanupAll = () => {
 		if (accordionMaps.value) {
+			// Cleanup all registered components
+			Object.keys(accordionMaps.value.headers).forEach(id => {
+				if (accordionMaps.value.headers[id]?.cleanup) {
+					accordionMaps.value.headers[id].cleanup();
+				}
+			});
+			Object.keys(accordionMaps.value.panels).forEach(id => {
+				if (accordionMaps.value.panels[id]?.cleanup) {
+					accordionMaps.value.panels[id].cleanup();
+				}
+			});
+
 			accordionMaps.value.headers = {};
 			accordionMaps.value.panels = {};
 		}
-	});
+	};
+
+	// Cleanup on scope dispose
+	onScopeDispose(cleanupAll);
+
+	// Additional cleanup for SSR
+	if (import.meta.server) {
+		onBeforeUnmount(cleanupAll);
+	}
 
 	return {
 		maps: accordionMaps,
 		registerHeader,
 		registerPanel,
+		cleanup: cleanupAll,
 	};
 }
