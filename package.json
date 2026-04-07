@@ -2,7 +2,7 @@
 	"name": "@limbo-works/accordion",
 	"type": "module",
 	"version": "2.2.1",
-	"main": "./nuxt.config.js",
+	"main": "./nuxt.config.ts",
 	"scripts": {
 		"dev": "nuxi dev .playground",
 		"build": "nuxt build .playground",
@@ -19,7 +19,7 @@
 		"@vue/test-utils": "^2.4.0",
 		"eslint-plugin-vitest": "^0.2.6",
 		"jsdom": "^22.1.0",
-		"nuxt": "^3.6.2",
+		"nuxt": "^4",
 		"vitest": "^0.33.0"
 	}
 }
