@@ -1,5 +1,47 @@
 # Changelog
 
+## [3.0.0](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/accordion-v2.2.1...accordion-v3.0.0) (2026-04-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* upgrade to Nuxt 4 and add latest release please
+* updated to use composition api ([#5](https://github.com/limbo-works/Limbo.Nuxt.Accordion/issues/5))
+* v1 and release-please
+
+### Features
+
+* add composable for using accordion maps ([7464657](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/7464657f757dc1957e4d0b0974acd72f9e1da1cf))
+* added better playground ([1958811](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/1958811be770599396518911a2cc582a098b948a))
+* added modelling to accordion panels ([2a3480b](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/2a3480b39129f087ac0730fcdc4f3289bc62672a))
+* cleanup and fixing further ([2e8a759](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/2e8a75975a49593e1cc604c11995df2969b9df26))
+* first release ([3072f17](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/3072f17cbe612b3b4cee16d2f4e872ae1880788c))
+* got some basic things working again ([66febea](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/66febea009f19e13ff1dc55cca50ce09d36ac25c))
+* made use of cleanup function ([110a340](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/110a340935c45b51903641db770664f8c33de0fb))
+* ran linting ([14328cb](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/14328cb7bc136aca49144ba972f278d54d365e49))
+* rewrote to not use direct instance references ([6c7a558](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/6c7a558f18e4b5161d43656874e91c0bcaa0c4c3))
+* updated to latest eslint ([59808cc](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/59808cce83b615d9eff5a78f02f43e2af369df05))
+* updated to use composition api ([#5](https://github.com/limbo-works/Limbo.Nuxt.Accordion/issues/5)) ([14e3c39](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/14e3c395f711a0a9f53fc8fd63854aabbe90d6ca))
+* upgrade to Nuxt 4 and add latest release please ([01cfe11](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/01cfe11036aca9a68013bb39dc8b3022750464d7))
+* upgraded to latest yarn packages ([f518f48](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/f518f48634646c7e214baf0a3c253154ce9e5fa4))
+* v1 and release-please ([b600575](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/b6005752a240c515a705a3edd8f4d28f4ce8b28b))
+
+
+### Bug Fixes
+
+* accordion level not properly updated ([1d3297c](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/1d3297c7cf3ea395a1f9aec21b3533f64e14b45b))
+* change max one open handling to use uid ([bb1422c](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/bb1422c09d192fb3a5dd1f9e313abf9f229c6529))
+* corrected issue related to `headerList` ([bbb4117](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/bbb411769df272be6ffae2b196ad053ef61507a7))
+* corrected issue with `checkOpenByHash` ([d4d344a](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/d4d344a684ff3e521c9c868a4e68e32053cb0650))
+* div in p tag ([edb1d4c](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/edb1d4c057776c962ad850f9eb9cc3a4ce17ecd6))
+* improved memory cleanup ([17a251f](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/17a251f5d6faee256ed69291f20193fa7ee8c62a))
+* made header navigation work again ([585ed06](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/585ed06f93b3dadb2d72703c4f24df33dc26eb0f))
+* more exposed data for linking together ([6650d10](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/6650d104e71596474842175e3f6862f7ca8ed087))
+* prevent default ([c8330e8](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/c8330e8cd5a254c297ad5eafcda4dd4cc948eb66))
+* read isOpen the right way ([47c50b7](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/47c50b78d2181111e2246d160de7130420cdc8bf))
+* unused instance ([d48dcf4](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/d48dcf4b2a342f50ee9fc25a9d522f79aa981727))
+* wrong references in cleanup ([1cce82a](https://github.com/limbo-works/Limbo.Nuxt.Accordion/commit/1cce82a4a1ace4c7e7163e9d05fda9b01b5bb80a))
+
 ## [2.2.1](https://github.com/limbo-works/Limbo.Nuxt.Accordion/compare/v2.2.0...v2.2.1) (2026-01-16)
 
 ### Bug Fixes
