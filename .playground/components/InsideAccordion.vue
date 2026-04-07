@@ -3,9 +3,11 @@
 		<strong>Nesting Level:</strong> {{ accordionLevel }}
 		<br />
 		<small>
-			<strong>Parent Panel:</strong> {{ accordionParentPanel ? 'Yes' : 'None' }}
+			<strong>Parent Panel:</strong>
+			{{ accordionParentPanel ? 'Yes' : 'None' }}
 			<br />
-			<strong>Accordion Group:</strong> {{ accordionGroup ? 'Present' : 'None' }}
+			<strong>Accordion Group:</strong>
+			{{ accordionGroup ? 'Present' : 'None' }}
 		</small>
 	</span>
 </template>

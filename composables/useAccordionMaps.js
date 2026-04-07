@@ -37,12 +37,12 @@ export default function useAccordionMaps() {
 	const cleanupAll = () => {
 		if (accordionMaps.value) {
 			// Cleanup all registered components
-			Object.keys(accordionMaps.value.headers).forEach(id => {
+			Object.keys(accordionMaps.value.headers).forEach((id) => {
 				if (accordionMaps.value.headers[id]?.cleanup) {
 					accordionMaps.value.headers[id].cleanup();
 				}
 			});
-			Object.keys(accordionMaps.value.panels).forEach(id => {
+			Object.keys(accordionMaps.value.panels).forEach((id) => {
 				if (accordionMaps.value.panels[id]?.cleanup) {
 					accordionMaps.value.panels[id].cleanup();
 				}

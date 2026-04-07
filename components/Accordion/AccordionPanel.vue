@@ -200,7 +200,10 @@ const denyClosing = computed(() => {
 		if (_accordionMaps.value?.panels) {
 			for (const key in _accordionMaps.value.panels) {
 				const panelData = _accordionMaps.value.panels[key];
-				if (panelData?.groupUid === accordionGroup?.uid && panelData?.isOpen?.value) {
+				if (
+					panelData?.groupUid === accordionGroup?.uid &&
+					panelData?.isOpen?.value
+				) {
 					openCount++;
 				}
 			}
@@ -243,7 +246,7 @@ if (typeof window !== 'undefined') {
 			open,
 			close,
 			toggle,
-		}
+		},
 	});
 }
 
@@ -260,7 +263,7 @@ onMounted(() => {
 			open,
 			close,
 			toggle,
-		}
+		},
 	});
 
 	checkOpenByHash();
@@ -311,8 +314,11 @@ function open() {
 			if (_accordionMaps.value?.panels) {
 				for (const key in _accordionMaps.value.panels) {
 					const panelData = _accordionMaps.value.panels[key];
-					if (panelData && panelData.groupUid === accordionGroup?.uid &&
-						panelData.id !== props.id) {
+					if (
+						panelData &&
+						panelData.groupUid === accordionGroup?.uid &&
+						panelData.id !== props.id
+					) {
 						panelData.methods?.close?.();
 					}
 				}
@@ -321,8 +327,9 @@ function open() {
 
 		if (props.openParentWhenOpened && accordionParentPanel) {
 			// Find parent panel data and call its open method
-			const parentPanelData = Object.values(_accordionMaps.value.panels || {})
-				.find(p => p.id === accordionParentPanel.mapId);
+			const parentPanelData = Object.values(
+				_accordionMaps.value.panels || {}
+			).find((p) => p.id === accordionParentPanel.mapId);
 			parentPanelData?.methods?.open?.();
 		}
 	}
@@ -360,7 +367,7 @@ function checkOpenByHash() {
 				[testHeader && `#${headerId}`, testPanel && `#${props.id}`]
 					.filter(Boolean)
 					.includes(hash) ||
-			(testWithin && instance.vnode.el?.querySelector?.(`${hash}`))
+				(testWithin && instance.vnode.el?.querySelector?.(`${hash}`))
 			) {
 				open();
 			}

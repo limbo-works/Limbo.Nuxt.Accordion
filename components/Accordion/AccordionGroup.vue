@@ -24,7 +24,11 @@ const props = defineProps({
 	},
 });
 
-provide('accordionGroup', { uid: groupUid, minOneOpen: computed(() => props.minOneOpen), maxOneOpen: computed(() => props.maxOneOpen) });
+provide('accordionGroup', {
+	uid: groupUid,
+	minOneOpen: computed(() => props.minOneOpen),
+	maxOneOpen: computed(() => props.maxOneOpen),
+});
 
 const headerList = computed(() => {
 	const list = [];
@@ -58,10 +62,14 @@ watch(panelList, () => {
 });
 
 // Also watch for changes in panel open states
-watch(() => panelList.value.map(p => p.isOpen?.value), () => {
-	checkMinOneOpen();
-	checkMaxOneOpen();
-}, { deep: true });
+watch(
+	() => panelList.value.map((p) => p.isOpen?.value),
+	() => {
+		checkMinOneOpen();
+		checkMaxOneOpen();
+	},
+	{ deep: true }
+);
 
 checkMinOneOpen();
 checkMaxOneOpen();
@@ -72,8 +80,10 @@ onBeforeUnmount(() => {
 
 	// Clean up all headers belonging to this group
 	if (_accordionMaps.value?.headers) {
-		Object.keys(_accordionMaps.value.headers).forEach(key => {
-			if (_accordionMaps.value.headers[key]?.groupUid === currentGroupUid) {
+		Object.keys(_accordionMaps.value.headers).forEach((key) => {
+			if (
+				_accordionMaps.value.headers[key]?.groupUid === currentGroupUid
+			) {
 				delete _accordionMaps.value.headers[key];
 			}
 		});
@@ -81,8 +91,10 @@ onBeforeUnmount(() => {
 
 	// Clean up all panels belonging to this group
 	if (_accordionMaps.value?.panels) {
-		Object.keys(_accordionMaps.value.panels).forEach(key => {
-			if (_accordionMaps.value.panels[key]?.groupUid === currentGroupUid) {
+		Object.keys(_accordionMaps.value.panels).forEach((key) => {
+			if (
+				_accordionMaps.value.panels[key]?.groupUid === currentGroupUid
+			) {
 				delete _accordionMaps.value.panels[key];
 			}
 		});
@@ -99,17 +111,24 @@ defineExpose({
 });
 
 function openAll() {
-	panelList.value.slice().reverse().forEach((panelData) => panelData.methods?.open?.());
+	panelList.value
+		.slice()
+		.reverse()
+		.forEach((panelData) => panelData.methods?.open?.());
 }
 
 function closeAll() {
-	panelList.value.slice().reverse().forEach((panelData) => panelData.methods?.close?.());
+	panelList.value
+		.slice()
+		.reverse()
+		.forEach((panelData) => panelData.methods?.close?.());
 }
 
 function checkMinOneOpen() {
 	if (
 		props.minOneOpen &&
-		panelList.value.filter((panelData) => panelData.isOpen?.value).length === 0
+		panelList.value.filter((panelData) => panelData.isOpen?.value)
+			.length === 0
 	) {
 		panelList.value?.[0]?.methods?.open?.();
 	}

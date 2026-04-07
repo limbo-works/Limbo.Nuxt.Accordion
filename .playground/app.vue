@@ -17,19 +17,31 @@
 			<h2>Basic Usage</h2>
 			<p>Simple accordion with multiple panels</p>
 			<AccordionGroup>
-				<AccordionHeader id="basic-header-1" aria-controls="basic-panel-1">
+				<AccordionHeader
+					id="basic-header-1"
+					aria-controls="basic-panel-1"
+				>
 					🚀 What is this accordion?
 				</AccordionHeader>
 				<AccordionPanel id="basic-panel-1">
-					<p>This is a flexible, accessible accordion component for Nuxt applications. It supports keyboard navigation, screen readers, and follows ARIA best practices.</p>
+					<p>
+						This is a flexible, accessible accordion component for
+						Nuxt applications. It supports keyboard navigation,
+						screen readers, and follows ARIA best practices.
+					</p>
 				</AccordionPanel>
 
-				<AccordionHeader id="basic-header-2" aria-controls="basic-panel-2">
+				<AccordionHeader
+					id="basic-header-2"
+					aria-controls="basic-panel-2"
+				>
 					⚡ Features
 				</AccordionHeader>
 				<AccordionPanel id="basic-panel-2">
 					<ul>
-						<li>Full keyboard navigation (Arrow keys, Home, End)</li>
+						<li>
+							Full keyboard navigation (Arrow keys, Home, End)
+						</li>
 						<li>ARIA compliant accessibility</li>
 						<li>Nested accordion support</li>
 						<li>Hash-based URL navigation</li>
@@ -38,7 +50,10 @@
 					</ul>
 				</AccordionPanel>
 
-				<AccordionHeader id="basic-header-3" aria-controls="basic-panel-3">
+				<AccordionHeader
+					id="basic-header-3"
+					aria-controls="basic-panel-3"
+				>
 					📚 Installation
 				</AccordionHeader>
 				<AccordionPanel id="basic-panel-3">
@@ -56,44 +71,59 @@
 				<button @click="closeAll">Close All</button>
 			</div>
 
-			<h3>Min One Open ({{ minOneOpenEnabled ? 'Enabled' : 'Disabled' }})</h3>
-			<button @click="minOneOpenEnabled = !minOneOpenEnabled" class="toggle-btn">
+			<h3>
+				Min One Open ({{ minOneOpenEnabled ? 'Enabled' : 'Disabled' }})
+			</h3>
+			<button
+				class="toggle-btn"
+				@click="minOneOpenEnabled = !minOneOpenEnabled"
+			>
 				Toggle Min One Open
 			</button>
 			<AccordionGroup
-				:min-one-open="minOneOpenEnabled"
 				ref="minOneAccordion"
+				:min-one-open="minOneOpenEnabled"
 			>
-				<template v-slot="{ method }" ref="minOneAccordionRef">
-					<AccordionHeader id="min-header-1" aria-controls="min-panel-1">
-						🔒 Panel 1 (Try to close all when min-one-open is enabled)
-					</AccordionHeader>
-					<AccordionPanel id="min-panel-1" start-open>
-						<p>This panel will remain open when min-one-open is enabled and it's the last open panel.</p>
-					</AccordionPanel>
+				<AccordionHeader id="min-header-1" aria-controls="min-panel-1">
+					🔒 Panel 1 (Try to close all when min-one-open is enabled)
+				</AccordionHeader>
+				<AccordionPanel id="min-panel-1" start-open>
+					<p>
+						This panel will remain open when min-one-open is enabled
+						and it's the last open panel.
+					</p>
+				</AccordionPanel>
 
-					<AccordionHeader id="min-header-2" aria-controls="min-panel-2">
-						📝 Panel 2
-					</AccordionHeader>
-					<AccordionPanel id="min-panel-2">
-						<p>This is the second panel content.</p>
-					</AccordionPanel>
-				</template>
+				<AccordionHeader id="min-header-2" aria-controls="min-panel-2">
+					📝 Panel 2
+				</AccordionHeader>
+				<AccordionPanel id="min-panel-2">
+					<p>This is the second panel content.</p>
+				</AccordionPanel>
 			</AccordionGroup>
 
-			<h3>Max One Open ({{ maxOneOpenEnabled ? 'Enabled' : 'Disabled' }})</h3>
-			<button @click="maxOneOpenEnabled = !maxOneOpenEnabled" class="toggle-btn">
+			<h3>
+				Max One Open ({{ maxOneOpenEnabled ? 'Enabled' : 'Disabled' }})
+			</h3>
+			<button
+				class="toggle-btn"
+				@click="maxOneOpenEnabled = !maxOneOpenEnabled"
+			>
 				Toggle Max One Open
 			</button>
 			<AccordionGroup
-				:max-one-open="maxOneOpenEnabled"
 				ref="maxOneAccordion"
+				:max-one-open="maxOneOpenEnabled"
 			>
 				<AccordionHeader id="max-header-1" aria-controls="max-panel-1">
-					🎯 Panel A (Opening this closes others when max-one-open is enabled)
+					🎯 Panel A (Opening this closes others when max-one-open is
+					enabled)
 				</AccordionHeader>
 				<AccordionPanel id="max-panel-1">
-					<p>Only one panel can be open at a time when max-one-open is enabled.</p>
+					<p>
+						Only one panel can be open at a time when max-one-open
+						is enabled.
+					</p>
 				</AccordionPanel>
 
 				<AccordionHeader id="max-header-2" aria-controls="max-panel-2">
@@ -115,42 +145,66 @@
 		<!-- Nested Accordions -->
 		<section id="nested" class="example-section">
 			<h2>Nested Accordions</h2>
-			<p>Accordions can be nested inside other accordions with proper level tracking</p>
+			<p>
+				Accordions can be nested inside other accordions with proper
+				level tracking
+			</p>
 
 			<AccordionGroup>
-				<AccordionHeader id="nest-parent-1" aria-controls="nest-panel-1">
+				<AccordionHeader
+					id="nest-parent-1"
+					aria-controls="nest-panel-1"
+				>
 					📁 Parent Level 1
 				</AccordionHeader>
 				<AccordionPanel id="nest-panel-1">
 					<p>This is level 1 content. <InsideAccordion /></p>
 
 					<AccordionGroup>
-						<AccordionHeader id="nest-child-1" aria-controls="nest-child-panel-1">
+						<AccordionHeader
+							id="nest-child-1"
+							aria-controls="nest-child-panel-1"
+						>
 							📂 Child Level 2
 						</AccordionHeader>
 						<AccordionPanel id="nest-child-panel-1">
 							<p>This is level 2 content. <InsideAccordion /></p>
 
 							<AccordionGroup>
-								<AccordionHeader id="nest-grandchild-1" aria-controls="nest-grandchild-panel-1">
+								<AccordionHeader
+									id="nest-grandchild-1"
+									aria-controls="nest-grandchild-panel-1"
+								>
 									📄 Grandchild Level 3
 								</AccordionHeader>
 								<AccordionPanel id="nest-grandchild-panel-1">
-									<p>This is level 3 content. <InsideAccordion /></p>
+									<p>
+										This is level 3 content.
+										<InsideAccordion />
+									</p>
 								</AccordionPanel>
 							</AccordionGroup>
 						</AccordionPanel>
 
-						<AccordionHeader id="nest-child-2" aria-controls="nest-child-panel-2">
+						<AccordionHeader
+							id="nest-child-2"
+							aria-controls="nest-child-panel-2"
+						>
 							🗃️ Another Child Level 2
 						</AccordionHeader>
 						<AccordionPanel id="nest-child-panel-2">
-							<p>This is another level 2 panel. <InsideAccordion /></p>
+							<p>
+								This is another level 2 panel.
+								<InsideAccordion />
+							</p>
 						</AccordionPanel>
 					</AccordionGroup>
 				</AccordionPanel>
 
-				<AccordionHeader id="nest-parent-2" aria-controls="nest-panel-2">
+				<AccordionHeader
+					id="nest-parent-2"
+					aria-controls="nest-panel-2"
+				>
 					📁 Another Parent Level 1
 				</AccordionHeader>
 				<AccordionPanel id="nest-panel-2">
@@ -165,37 +219,56 @@
 			<p>Custom animations and transitions for panel open/close</p>
 
 			<AccordionGroup>
-				<AccordionHeader id="trans-header-1" aria-controls="trans-panel-1">
+				<AccordionHeader
+					id="trans-header-1"
+					aria-controls="trans-panel-1"
+				>
 					✨ Slide Transition
 				</AccordionHeader>
 				<AccordionPanel
 					id="trans-panel-1"
 					:transition="slideTransition"
 				>
-					<p>This panel slides in and out smoothly with a custom transition.</p>
+					<p>
+						This panel slides in and out smoothly with a custom
+						transition.
+					</p>
 					<div class="demo-content">
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+						<p>
+							Lorem ipsum dolor sit amet, consectetur adipiscing
+							elit. Sed do eiusmod tempor incididunt ut labore et
+							dolore magna aliqua.
+						</p>
 					</div>
 				</AccordionPanel>
 
-				<AccordionHeader id="trans-header-2" aria-controls="trans-panel-2">
+				<AccordionHeader
+					id="trans-header-2"
+					aria-controls="trans-panel-2"
+				>
 					🎭 Fade Transition
 				</AccordionHeader>
-				<AccordionPanel
-					id="trans-panel-2"
-					:transition="fadeTransition"
-				>
+				<AccordionPanel id="trans-panel-2" :transition="fadeTransition">
 					<p>This panel fades in and out with opacity changes.</p>
 					<div class="demo-content">
-						<img src="https://via.placeholder.com/300x200" alt="Demo image" />
+						<img
+							src="https://via.placeholder.com/300x200"
+							alt="Demo image"
+						/>
 					</div>
 				</AccordionPanel>
 
-				<AccordionHeader id="trans-header-3" aria-controls="trans-panel-3">
+				<AccordionHeader
+					id="trans-header-3"
+					aria-controls="trans-panel-3"
+				>
 					🚀 No Transition
 				</AccordionHeader>
 				<AccordionPanel id="trans-panel-3">
-					<p>This panel opens and closes instantly without any transition.</p>
+					<p>
+						This panel opens and closes instantly without any
+						transition.
+					</p>
 				</AccordionPanel>
 			</AccordionGroup>
 		</section>
@@ -213,41 +286,71 @@
 			</div>
 
 			<AccordionGroup>
-				<AccordionHeader id="hash-header-1" aria-controls="hash-panel-1">
+				<AccordionHeader
+					id="hash-header-1"
+					aria-controls="hash-panel-1"
+				>
 					🔗 Panel 1 (opens via #hash-panel-1)
 				</AccordionHeader>
 				<AccordionPanel
 					id="hash-panel-1"
-					:open-by-hash="{ header: false, panel: true, withinPanel: false }"
+					:open-by-hash="{
+						header: false,
+						panel: true,
+						withinPanel: false,
+					}"
 				>
 					<p>This panel opens when you navigate to #hash-panel-1</p>
 				</AccordionPanel>
 
-				<AccordionHeader id="hash-header-2" aria-controls="hash-panel-2">
+				<AccordionHeader
+					id="hash-header-2"
+					aria-controls="hash-panel-2"
+				>
 					🎯 Panel 2 (opens via #hash-header-2)
 				</AccordionHeader>
 				<AccordionPanel
 					id="hash-panel-2"
-					:open-by-hash="{ header: true, panel: false, withinPanel: false }"
+					:open-by-hash="{
+						header: true,
+						panel: false,
+						withinPanel: false,
+					}"
 				>
-					<p>This panel opens when you navigate to the header ID #hash-header-2</p>
+					<p>
+						This panel opens when you navigate to the header ID
+						#hash-header-2
+					</p>
 				</AccordionPanel>
 
-				<AccordionHeader id="hash-header-3" aria-controls="hash-panel-3">
+				<AccordionHeader
+					id="hash-header-3"
+					aria-controls="hash-panel-3"
+				>
 					📍 Panel 3 (opens via #hash-panel-3)
 				</AccordionHeader>
 				<AccordionPanel id="hash-panel-3">
 					<p>This panel opens when you navigate to #hash-panel-3</p>
 				</AccordionPanel>
 
-				<AccordionHeader id="hash-header-4" aria-controls="hash-panel-4">
+				<AccordionHeader
+					id="hash-header-4"
+					aria-controls="hash-panel-4"
+				>
 					🎪 Panel 4 (opens via nested element #nested-target)
 				</AccordionHeader>
 				<AccordionPanel
 					id="hash-panel-4"
-					:open-by-hash="{ header: false, panel: false, withinPanel: true }"
+					:open-by-hash="{
+						header: false,
+						panel: false,
+						withinPanel: true,
+					}"
 				>
-					<p>This panel opens when you navigate to an element inside it:</p>
+					<p>
+						This panel opens when you navigate to an element inside
+						it:
+					</p>
 					<div id="nested-target" class="highlight-target">
 						🎯 This is the nested target element!
 					</div>
@@ -258,17 +361,30 @@
 		<!-- Accessibility -->
 		<section id="accessibility" class="example-section">
 			<h2>Accessibility Features</h2>
-			<p>ARIA compliant with keyboard navigation and screen reader support</p>
+			<p>
+				ARIA compliant with keyboard navigation and screen reader
+				support
+			</p>
 
 			<div class="accessibility-info">
 				<h3>Keyboard Controls:</h3>
 				<ul>
-					<li><kbd>Tab</kbd> / <kbd>Shift+Tab</kbd> - Navigate between accordion headers</li>
-					<li><kbd>Space</kbd> / <kbd>Enter</kbd> - Toggle panel open/closed</li>
+					<li>
+						<kbd>Tab</kbd> / <kbd>Shift+Tab</kbd> - Navigate between
+						accordion headers
+					</li>
+					<li>
+						<kbd>Space</kbd> / <kbd>Enter</kbd> - Toggle panel
+						open/closed
+					</li>
 					<li><kbd>Home</kbd> - Focus first header</li>
 					<li><kbd>End</kbd> - Focus last header</li>
-					<li><kbd>↑</kbd> / <kbd>↓</kbd> - Navigate between headers</li>
-					<li><kbd>←</kbd> / <kbd>→</kbd> - Navigate between headers</li>
+					<li>
+						<kbd>↑</kbd> / <kbd>↓</kbd> - Navigate between headers
+					</li>
+					<li>
+						<kbd>←</kbd> / <kbd>→</kbd> - Navigate between headers
+					</li>
 				</ul>
 			</div>
 
@@ -284,7 +400,10 @@
 					id="a11y-panel-1"
 					aria-label="Custom panel label for screen readers"
 				>
-					<p>This panel has a custom aria-label for screen readers and tracks focus events.</p>
+					<p>
+						This panel has a custom aria-label for screen readers
+						and tracks focus events.
+					</p>
 				</AccordionPanel>
 
 				<AccordionHeader
@@ -295,7 +414,10 @@
 					🔓 Enabled Panel 2
 				</AccordionHeader>
 				<AccordionPanel id="a11y-panel-2">
-					<p>This panel is always enabled and can be opened/closed freely.</p>
+					<p>
+						This panel is always enabled and can be opened/closed
+						freely.
+					</p>
 				</AccordionPanel>
 
 				<AccordionHeader
@@ -325,7 +447,11 @@
 					📝 H3 Header Element
 				</AccordionHeader>
 				<AccordionPanel id="custom-panel-1" tag="article">
-					<p>This accordion uses a &lt;section&gt; as the group, &lt;h3&gt; as the header, and &lt;article&gt; as the panel.</p>
+					<p>
+						This accordion uses a &lt;section&gt; as the group,
+						&lt;h3&gt; as the header, and &lt;article&gt; as the
+						panel.
+					</p>
 				</AccordionPanel>
 
 				<AccordionHeader
@@ -336,7 +462,10 @@
 					🏷️ Summary Element
 				</AccordionHeader>
 				<AccordionPanel id="custom-panel-2" tag="details">
-					<p>This uses &lt;summary&gt; and &lt;details&gt; elements for semantic HTML.</p>
+					<p>
+						This uses &lt;summary&gt; and &lt;details&gt; elements
+						for semantic HTML.
+					</p>
 				</AccordionPanel>
 			</AccordionGroup>
 		</section>
@@ -348,26 +477,39 @@
 
 			<div class="event-log">
 				<h3>Event Log:</h3>
-				<div class="log-container" ref="eventLog">
-					<div v-for="event in eventHistory" :key="event.id" class="log-entry">
+				<div ref="eventLog" class="log-container">
+					<div
+						v-for="event in eventHistory"
+						:key="event.id"
+						class="log-entry"
+					>
 						<span class="timestamp">{{ event.timestamp }}</span>
 						<span class="event-type">{{ event.type }}</span>
 						<span class="event-data">{{ event.data }}</span>
 					</div>
 				</div>
-				<button @click="clearEventLog" class="clear-btn">Clear Log</button>
+				<button class="clear-btn" @click="clearEventLog">
+					Clear Log
+				</button>
 			</div>
 
 			<div class="model-controls">
-				<p>Panel 1 State: <strong>{{ panel1Open ? 'Open' : 'Closed' }}</strong></p>
-				<button @click="panel1Open = !panel1Open" class="toggle-btn">
+				<p>
+					Panel 1 State:
+					<strong>{{ panel1Open ? 'Open' : 'Closed' }}</strong>
+				</p>
+				<button class="toggle-btn" @click="panel1Open = !panel1Open">
 					Toggle Panel 1 via v-model
 				</button>
 			</div>
 
 			<AccordionGroup>
-				<AccordionHeader id="event-header-1" aria-controls="event-panel-1">
-					🎮 Panel 1 (v-model controlled: {{ panel1Open ? 'Open' : 'Closed' }})
+				<AccordionHeader
+					id="event-header-1"
+					aria-controls="event-panel-1"
+				>
+					🎮 Panel 1 (v-model controlled:
+					{{ panel1Open ? 'Open' : 'Closed' }})
 				</AccordionHeader>
 				<AccordionPanel
 					id="event-panel-1"
@@ -376,21 +518,30 @@
 					@change:open="onPanelOpen"
 					@change:close="onPanelClose"
 				>
-					<p>This panel's state is controlled via v-model and emits events when changed.</p>
+					<p>
+						This panel's state is controlled via v-model and emits
+						events when changed.
+					</p>
 					<p>Current state: {{ panel1Open ? 'Open' : 'Closed' }}</p>
 				</AccordionPanel>
 
-				<AccordionHeader id="event-header-2" aria-controls="event-panel-2">
+				<AccordionHeader
+					id="event-header-2"
+					aria-controls="event-panel-2"
+				>
 					📊 Panel 2 (Event tracking only)
 				</AccordionHeader>
 				<AccordionPanel
 					id="event-panel-2"
+					start-open
 					@change="onPanelChange"
 					@change:open="onPanelOpen"
 					@change:close="onPanelClose"
-					start-open
 				>
-					<p>This panel starts open and only tracks events (no v-model binding).</p>
+					<p>
+						This panel starts open and only tracks events (no
+						v-model binding).
+					</p>
 				</AccordionPanel>
 			</AccordionGroup>
 		</section>
@@ -420,7 +571,7 @@ const slideTransition = {
 	enterToClass: 'slide-enter-to',
 	leaveFromClass: 'slide-leave-from',
 	leaveActiveClass: 'slide-leave-active',
-	leaveToClass: 'slide-leave-to'
+	leaveToClass: 'slide-leave-to',
 };
 
 const fadeTransition = {
@@ -430,12 +581,15 @@ const fadeTransition = {
 	enterToClass: 'fade-enter-to',
 	leaveFromClass: 'fade-leave-from',
 	leaveActiveClass: 'fade-leave-active',
-	leaveToClass: 'fade-leave-to'
+	leaveToClass: 'fade-leave-to',
 };
 
 // Event handlers
 function onPanelChange(event) {
-	addEventLog('change', `Panel ${event.target.id}: ${event.isOpen ? 'opened' : 'closed'}`);
+	addEventLog(
+		'change',
+		`Panel ${event.target.id}: ${event.isOpen ? 'opened' : 'closed'}`
+	);
 }
 
 function onPanelOpen(event) {
@@ -456,7 +610,7 @@ function addEventLog(type, data) {
 		id: Date.now(),
 		timestamp: new Date().toLocaleTimeString(),
 		type,
-		data
+		data,
 	};
 
 	eventHistory.value.unshift(event);
@@ -499,18 +653,26 @@ function closeAll() {
 // Watch v-model changes
 watch(panel1Open, (newVal, oldVal) => {
 	if (newVal !== oldVal) {
-		addEventLog('v-model', `Panel 1 v-model changed to: ${newVal ? 'open' : 'closed'}`);
+		addEventLog(
+			'v-model',
+			`Panel 1 v-model changed to: ${newVal ? 'open' : 'closed'}`
+		);
 	}
 });
 </script>
 
 <style lang="css">
-	/* Playground Styles */
+/* Playground Styles */
 .playground {
 	max-width: 1200px;
 	margin: 0 auto;
 	padding: 2rem;
-	font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	font-family:
+		system-ui,
+		-apple-system,
+		BlinkMacSystemFont,
+		'Segoe UI',
+		sans-serif;
 	line-height: 1.6;
 }
 
@@ -567,7 +729,7 @@ nav a:hover {
 	border: 1px solid #e1e8ed;
 	border-radius: 8px;
 	background: #ffffff;
-	box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Accordion Basic Styling */
@@ -587,7 +749,9 @@ nav a:hover {
 	cursor: pointer;
 	font-size: 1rem;
 	font-weight: 500;
-	transition: background-color 0.2s, color 0.2s;
+	transition:
+		background-color 0.2s,
+		color 0.2s;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -603,12 +767,12 @@ nav a:hover {
 	background: #e7f3ff;
 }
 
-.c-accordion-header[aria-expanded="true"] {
+.c-accordion-header[aria-expanded='true'] {
 	background: #3498db;
 	color: white;
 }
 
-.c-accordion-header[aria-disabled="true"] {
+.c-accordion-header[aria-disabled='true'] {
 	background: #f8f9fa;
 	color: #6c757d;
 	cursor: not-allowed;
@@ -616,13 +780,13 @@ nav a:hover {
 }
 
 .c-accordion-header::after {
-	content: "▼";
+	content: '▼';
 	transition: transform 0.2s;
 	margin-left: auto;
 	padding-left: 1rem;
 }
 
-.c-accordion-header[aria-expanded="true"]::after {
+.c-accordion-header[aria-expanded='true']::after {
 	transform: rotate(180deg);
 }
 
@@ -654,7 +818,8 @@ nav a:hover {
 }
 
 /* Control Buttons */
-.demo-controls, .model-controls {
+.demo-controls,
+.model-controls {
 	display: flex;
 	gap: 1rem;
 	margin: 1rem 0;
@@ -662,7 +827,8 @@ nav a:hover {
 	align-items: center;
 }
 
-.toggle-btn, .clear-btn {
+.toggle-btn,
+.clear-btn {
 	padding: 0.5rem 1rem;
 	background: #17a2b8;
 	color: white;
@@ -672,7 +838,8 @@ nav a:hover {
 	transition: background-color 0.2s;
 }
 
-.toggle-btn:hover, .clear-btn:hover {
+.toggle-btn:hover,
+.clear-btn:hover {
 	background: #138496;
 }
 
@@ -881,12 +1048,17 @@ nav a:hover {
 		font-size: 0.9rem;
 	}
 
-	.demo-controls, .model-controls, .hash-links {
+	.demo-controls,
+	.model-controls,
+	.hash-links {
 		flex-direction: column;
 		align-items: stretch;
 	}
 
-	.demo-controls button, .toggle-btn, .clear-btn, .hash-links a {
+	.demo-controls button,
+	.toggle-btn,
+	.clear-btn,
+	.hash-links a {
 		text-align: center;
 	}
 
@@ -907,7 +1079,10 @@ nav a:hover {
 		line-height: 1.4;
 	}
 
-	nav, .demo-controls, .hash-links, .event-log {
+	nav,
+	.demo-controls,
+	.hash-links,
+	.event-log {
 		display: none;
 	}
 

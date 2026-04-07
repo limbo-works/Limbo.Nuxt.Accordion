@@ -66,9 +66,7 @@ const panel = computed(() => {
 	return null;
 });
 
-const ariaExpanded = computed(() =>
-	panel.value?.isOpen ? 'true' : 'false'
-);
+const ariaExpanded = computed(() => (panel.value?.isOpen ? 'true' : 'false'));
 const computedAriaDisabled = computed(() =>
 	panel.value?.denyClosing ? 'true' : props.ariaDisabled
 );
@@ -85,7 +83,7 @@ if (typeof window !== 'undefined') {
 		methods: {
 			focus: () => instance?.refs?.button?.focus?.(),
 			click: clickHandler,
-		}
+		},
 	});
 }
 
@@ -101,7 +99,7 @@ onMounted(() => {
 		methods: {
 			focus: () => instance?.refs?.button?.focus?.(),
 			click: clickHandler,
-		}
+		},
 	});
 });
 
@@ -143,10 +141,12 @@ function keyupHandler(e) {
 		}
 
 		if (headers.length > 1) {
-			const headerElements = headers.map((headerData) => {
-				// Find the DOM element for each header
-				return document.getElementById(headerData.id);
-			}).filter(Boolean);
+			const headerElements = headers
+				.map((headerData) => {
+					// Find the DOM element for each header
+					return document.getElementById(headerData.id);
+				})
+				.filter(Boolean);
 
 			const index = headerElements.findIndex((el) => el === e.target);
 
