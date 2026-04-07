@@ -14,7 +14,7 @@
 		"test": "vitest"
 	},
 	"devDependencies": {
-		"@limbo-works/lint-configs": "^2.0.3",
+		"@limbo-works/lint-configs": "^2.1.0",
 		"@vitejs/plugin-vue": "^6.0.5",
 		"@vue/test-utils": "^2.4.0",
 		"eslint-plugin-vitest": "^0.5.4",
